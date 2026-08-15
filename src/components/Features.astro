@@ -1,0 +1,109 @@
+---
+---
+<section class="section bg-alt">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Everything You Need for Your Online Presence</h2>
+            <p class="section-subtitle mx-auto">We provide the robust infrastructure to keep your domain secure and performing optimally.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="check-icon">✓</div>
+                <div>
+                    <h4>Full DNS Management</h4>
+                    <p>Total control over your domain's DNS records, easily point to any hosting service.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="check-icon">✓</div>
+                <div>
+                    <h4>State-of-the-art Security</h4>
+                    <p>Advanced protection against domain hijacking and unauthorized transfers.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="check-icon">✓</div>
+                <div>
+                    <h4>Seamless Integration</h4>
+                    <p>Connect your domain to Shopify, Wix, WordPress or any platform in just clicks.</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="check-icon">✓</div>
+                <div>
+                    <h4>Privacy Protection</h4>
+                    <p>Keep your personal information safe and secure in the WHOIS database.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-alt {
+        background-color: var(--color-bg-alt);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+    
+    .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .feature-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1.5rem;
+        background: white;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--color-border);
+    }
+
+    .check-icon {
+        background-color: var(--color-primary);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+    }
+
+    .feature-item h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .feature-item p {
+        color: var(--color-text-muted);
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

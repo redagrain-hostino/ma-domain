@@ -1,0 +1,93 @@
+---
+---
+<section class="search-section section">
+    <div class="container">
+        <div class="search-card card">
+            <h2 class="search-title">Instantly check if your desired .ma domain is available.</h2>
+            <form action="https://mawhois.com/" method="GET" target="_blank" class="search-form">
+                <div class="input-group">
+                    <span class="www">www.</span>
+                    <input type="text" name="domain" placeholder="yourcompany" required class="search-input" />
+                    <span class="extension">.ma</span>
+                </div>
+                <button type="submit" class="btn btn-primary search-btn">Search</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    .search-section {
+        margin-top: -4rem;
+        padding-top: 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .search-card {
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .search-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+    }
+
+    .search-form {
+        display: flex;
+        max-width: 700px;
+        margin: 0 auto;
+        gap: 1rem;
+    }
+
+    .input-group {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        border: 2px solid var(--color-border);
+        border-radius: 9999px; /* Pill shape for input */
+        padding: 0 1.5rem; /* Slightly more padding for pill shape */
+        background: white;
+        transition: border-color 0.2s ease;
+    }
+
+    .input-group:focus-within {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(81, 112, 255, 0.1);
+    }
+
+    .www, .extension {
+        color: var(--color-text-muted);
+        font-weight: 500;
+        font-size: 1.125rem;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 1rem 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: var(--color-text);
+        width: 100%;
+    }
+
+    .search-btn {
+        padding: 0 2.5rem;
+        font-size: 1.125rem;
+    }
+
+    @media (max-width: 768px) {
+        .search-form {
+            flex-direction: column;
+        }
+        .search-btn {
+            padding: 1rem;
+            width: 100%;
+        }
+    }
+</style>

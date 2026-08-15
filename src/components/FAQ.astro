@@ -1,0 +1,86 @@
+---
+---
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle mx-auto">Everything you need to know about .ma domain registration.</p>
+        </div>
+
+        <div class="faq-grid">
+            <div class="faq-item card">
+                <h3>Who can register a .ma domain?</h3>
+                <p>Any individual or organization, both inside and outside Morocco, can register a .ma domain as long as they comply with the official naming charter set by ANRT.</p>
+            </div>
+            
+            <div class="faq-item card">
+                <h3>How long does registration take?</h3>
+                <p>Our process is highly optimized. In most cases, if all required information is provided correctly, your .ma domain will be activated instantly or within a few hours.</p>
+            </div>
+            
+            <div class="faq-item card">
+                <h3>What is the difference between .ma and .co.ma?</h3>
+                <p>.ma is the top-level country code extension, ideal for any entity. .co.ma is specifically designated for commercial enterprises and requires you to provide a Moroccan ICE or RC number during registration.</p>
+            </div>
+            
+            <div class="faq-item card">
+                <h3>What documents are needed for verification?</h3>
+                <p>For individuals, a valid CIN (National Identity Card) is required. For businesses, the ICE (Identifiant Commun de l'Entreprise) or commercial register details are necessary.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .text-center { text-align: center; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        padding: 2rem;
+    }
+
+    .faq-item h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--color-text);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .faq-item h3::before {
+        content: '?';
+        background-color: var(--color-primary);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+    }
+
+    .faq-item p {
+        color: var(--color-text-muted);
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .faq-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

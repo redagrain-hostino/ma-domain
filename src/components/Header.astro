@@ -1,0 +1,75 @@
+---
+import maLogo from '../assets/ma-logo.png';
+---
+<header class="header">
+    <div class="container header-container">
+        <a href="/" class="logo-link">
+            <img src={maLogo.src} alt=".ma Domain Logo" class="logo-img" />
+        </a>
+        
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Home</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#free" class="nav-link">Free</a>
+            <a href="https://mawhois.com/" target="_blank" class="nav-link">WhoIS</a>
+            <a href="#" class="nav-link">Blog</a>
+        </nav>
+        
+        <div class="header-actions">
+            <a href="https://hostino.ma/" target="_blank" class="btn btn-primary">Register .ma</a>
+        </div>
+    </div>
+</header>
+
+<style>
+    .header {
+        background: rgba(245, 248, 255, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 110px;
+    }
+
+    .logo-img {
+        height: 70px;
+        width: auto;
+    }
+
+    .nav-menu {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .nav-link {
+        color: var(--color-text);
+        font-weight: 500;
+        font-size: 1.15rem;
+        transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+        color: var(--color-primary);
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .nav-menu {
+            display: none; /* In a real app, you'd add a mobile hamburger menu here */
+        }
+    }
+</style>
