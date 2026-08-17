@@ -4,11 +4,18 @@
     <div class="container">
         <div class="search-card card">
             <h2 class="search-title">Instantly check if your desired .ma domain is available.</h2>
-            <form action="https://mawhois.com/" method="GET" target="_blank" class="search-form">
+            <form id="domain-search-form" action="https://mawhois.com/" method="GET" target="_blank" class="search-form">
                 <div class="input-group">
                     <span class="www">www.</span>
-                    <input type="text" name="domain" placeholder="yourcompany" required class="search-input" />
-                    <span class="extension">.ma</span>
+                    <input type="text" id="domain-search-input" class="search-input" placeholder="yourcompany" required />
+                    <input type="hidden" name="domain" id="domain-search-full" />
+                    <select class="extension-select-inline" id="domain-ext-select">
+                        <option value=".ma">.ma</option>
+                        <option value=".co.ma">.co.ma</option>
+                        <option value=".net.ma">.net.ma</option>
+                        <option value=".org.ma">.org.ma</option>
+                        <option value=".edu.ma">.edu.ma</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary search-btn">Search</button>
             </form>
@@ -59,10 +66,24 @@
         box-shadow: 0 0 0 3px rgba(81, 112, 255, 0.1);
     }
 
-    .www, .extension {
+    .www {
         color: var(--color-text-muted);
         font-weight: 500;
         font-size: 1.125rem;
+    }
+
+    .extension-select-inline {
+        appearance: none;
+        background: transparent url('data:image/svg+xml;utf8,<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%234a5568" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right center;
+        background-size: 14px;
+        padding: 0 1.25rem 0 0.25rem;
+        border: none;
+        outline: none;
+        color: var(--color-text-muted);
+        font-weight: 500;
+        font-size: 1.125rem;
+        cursor: pointer;
+        font-family: inherit;
     }
 
     .search-input {
@@ -91,3 +112,20 @@
         }
     }
 </style>
+
+<script>
+    const formInline = document.getElementById('domain-search-form') as HTMLFormElement;
+    const inputInline = document.getElementById('domain-search-input') as HTMLInputElement;
+    const selectInline = document.getElementById('domain-ext-select') as HTMLSelectElement;
+    const hiddenInline = document.getElementById('domain-search-full') as HTMLInputElement;
+
+    if (formInline && inputInline && selectInline && hiddenInline) {
+        formInline.addEventListener('submit', (e) => {
+            let domain = inputInline.value.trim().toLowerCase();
+            if (!domain.includes('.')) {
+                domain = domain + selectInline.value;
+            }
+            hiddenInline.value = domain;
+        });
+    }
+</script>

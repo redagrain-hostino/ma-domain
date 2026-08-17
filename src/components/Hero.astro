@@ -6,8 +6,8 @@ interface Props {
 }
 
 const {
-    title = "Trouvez le domaine parfait pour votre prochaine idée",
-    subtitle = "Recherchez, découvrez et sécurisez des noms de domaine mémorables pour votre entreprise, startup ou projet personnel au Maroc et dans le monde.",
+    title = "Find the perfect domain for your next idea",
+    subtitle = "Search, discover, and secure memorable domain names for your business, startup, or personal project in Morocco and worldwide.",
 } = Astro.props;
 ---
 
@@ -25,7 +25,7 @@ const {
             <div class="hero-content">
                 <div class="badge fade-in" style="--delay: 0.1s">
                     <span class="badge-dot"></span>
-                    <span>Marketplace de domaines premium</span>
+                    <span>Premium domain marketplace</span>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
@@ -42,7 +42,7 @@ const {
                 </p>
 
                 <!-- Premium Search Bar -->
-                <form class="search-card fade-in" style="--delay: 0.4s" role="search" aria-label="Rechercher un domaine">
+                <form class="search-card fade-in" style="--delay: 0.4s" id="hero-search-form" action="https://mawhois.com/" method="GET" target="_blank" role="search" aria-label="Search for a domain">
                     <div class="search-inner">
                         <div class="search-field">
                             <svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -51,20 +51,24 @@ const {
                             </svg>
                             <input
                                 type="text"
+                                id="hero-domain-input"
                                 class="search-input"
-                                placeholder="Recherchez votre domaine idéal..."
-                                aria-label="Nom du domaine"
+                                placeholder="Search for your ideal domain..."
+                                aria-label="Domain name"
                                 autocomplete="off"
+                                required
                             />
-                            <button type="button" class="extension-btn" aria-haspopup="listbox">
-                                <span>.ma</span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <path d="m6 9 6 6 6-6"/>
-                                </svg>
-                            </button>
+                            <input type="hidden" name="domain" id="hero-domain-full" />
+                            <select class="extension-select" id="hero-ext-select">
+                                <option value=".ma">.ma</option>
+                                <option value=".co.ma">.co.ma</option>
+                                <option value=".net.ma">.net.ma</option>
+                                <option value=".org.ma">.org.ma</option>
+                                <option value=".edu.ma">.edu.ma</option>
+                            </select>
                         </div>
                         <button type="submit" class="search-submit">
-                            <span>Rechercher</span>
+                            <span>Search</span>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
@@ -78,21 +82,21 @@ const {
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                         </svg>
-                        <span>Recherche instantanée</span>
+                        <span>Instant search</span>
                     </div>
                     <span class="trust-dot" aria-hidden="true"></span>
                     <div class="trust-item">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                             <path d="M20 6L9 17l-5-5"/>
                         </svg>
-                        <span>Prix transparents</span>
+                        <span>Transparent pricing</span>
                     </div>
                     <span class="trust-dot" aria-hidden="true"></span>
                     <div class="trust-item">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
-                        <span>Inscription sécurisée</span>
+                        <span>Secure registration</span>
                     </div>
                 </div>
 
@@ -107,7 +111,7 @@ const {
                     </a>
                     <span class="link-sep" aria-hidden="true"></span>
                     <a href="https://hostino.ma/" target="_blank" rel="noopener" class="ghost-link">
-                        <span>Transférer un domaine</span>
+                        <span>Transfer a domain</span>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M7 17L17 7M7 7h10v10"/>
                         </svg>
@@ -125,14 +129,14 @@ const {
                             <span class="showcase-price">4 999 DH</span>
                         </div>
                         <div class="showcase-domain">startup.ma</div>
-                        <p class="showcase-desc">Idéal pour une startup tech au Maroc.</p>
+                        <p class="showcase-desc">Ideal for a tech startup in Morocco.</p>
                         <div class="showcase-footer">
                             <div class="showcase-avatars">
                                 <span class="avatar"></span>
                                 <span class="avatar"></span>
                                 <span class="avatar"></span>
                             </div>
-                            <span class="showcase-views">12 vues cette semaine</span>
+                            <span class="showcase-views">12 views this week</span>
                         </div>
                     </div>
 
@@ -157,8 +161,9 @@ const {
 
                     <!-- Extension pills -->
                     <div class="ext-pill ext-1">.ma</div>
-                    <div class="ext-pill ext-2">.com</div>
-                    <div class="ext-pill ext-3">.io</div>
+                    <div class="ext-pill ext-2">.co.ma</div>
+                    <div class="ext-pill ext-3">.org.ma</div>
+                    <div class="ext-pill ext-4">.edu.ma</div>
                 </div>
             </div>
 
@@ -357,12 +362,11 @@ const {
         opacity: 0.7;
     }
 
-    .extension-btn {
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.5rem 0.9rem;
-        background: rgba(81, 112, 255, 0.08);
+    .extension-select {
+        appearance: none;
+        background: rgba(81, 112, 255, 0.08) url('data:image/svg+xml;utf8,<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%235170ff" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 0.75rem center;
+        background-size: 14px;
+        padding: 0.5rem 2rem 0.5rem 1rem;
         border: 1px solid rgba(81, 112, 255, 0.15);
         border-radius: 9999px;
         cursor: pointer;
@@ -372,18 +376,11 @@ const {
         color: var(--color-primary);
         transition: all 0.2s ease;
         flex-shrink: 0;
+        outline: none;
     }
 
-    .extension-btn:hover {
-        background: rgba(81, 112, 255, 0.14);
-    }
-
-    .extension-btn svg {
-        transition: transform 0.2s ease;
-    }
-
-    .extension-btn:hover svg {
-        transform: translateY(2px);
+    .extension-select:hover {
+        background-color: rgba(81, 112, 255, 0.14);
     }
 
     .search-submit {
@@ -719,6 +716,13 @@ const {
         animation-delay: -2.5s;
     }
 
+    .ext-4 {
+        top: 15%;
+        right: 15%;
+        animation: float-1 6.5s ease-in-out infinite;
+        animation-delay: -1.5s;
+    }
+
     /* ============ FADE IN ANIMATION ============ */
     .fade-in {
         opacity: 0;
@@ -812,3 +816,20 @@ const {
         }
     }
 </style>
+
+<script>
+    const form = document.getElementById('hero-search-form') as HTMLFormElement;
+    const input = document.getElementById('hero-domain-input') as HTMLInputElement;
+    const select = document.getElementById('hero-ext-select') as HTMLSelectElement;
+    const hidden = document.getElementById('hero-domain-full') as HTMLInputElement;
+
+    if (form && input && select && hidden) {
+        form.addEventListener('submit', (e) => {
+            let domain = input.value.trim().toLowerCase();
+            if (!domain.includes('.')) {
+                domain = domain + select.value;
+            }
+            hidden.value = domain;
+        });
+    }
+</script>

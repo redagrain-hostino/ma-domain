@@ -27,8 +27,8 @@ const navItems = [
 ];
 
 const languages = [
-    { code: 'fr', label: 'Français', flag: '🇫🇷', path: '/fr/' },
     { code: 'en', label: 'English', flag: '🇬🇧', path: '/en/' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷', path: '/fr/' },
     { code: 'ar', label: 'العربية', flag: '🇲🇦', path: '/ar/' },
     { code: 'nl', label: 'Nederlands', flag: '🇳🇱', path: '/nl/' },
     { code: 'es', label: 'Español', flag: '🇪🇸', path: '/es/' },
@@ -40,7 +40,7 @@ const languages = [
 // Langue courante (détection simple via l'URL)
 const currentLang = (() => {
     const path = Astro.url.pathname.split('/')[1];
-    return languages.find((l) => l.code === path) || languages[0];
+    return languages.find((l) => l.code === path) || languages.find((l) => l.code === 'en');
 })();
 ---
 
