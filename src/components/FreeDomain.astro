@@ -1,60 +1,483 @@
----
----
-<section class="section bg-primary-light">
+<section class="section promo-section" id="free">
+    <!-- Decorative elements -->
+    <div class="promo-bg" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="grid-dots"></div>
+    </div>
+
     <div class="container">
-        <div class="banner-content">
-            <div class="banner-text">
-                <h2>Get Your .ma Domain for Free!</h2>
-                <p>Launch your website today. Register a select web hosting plan with Hostino and receive your .ma domain completely free for the first year.</p>
+        <div class="promo-card">
+            
+            <!-- Left: Gift visual -->
+            <div class="promo-visual">
+                <div class="gift-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <polyline points="20 12 20 22 4 22 4 12"/>
+                        <rect x="2" y="7" width="20" height="5"/>
+                        <line x1="12" y1="22" x2="12" y2="7"/>
+                        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                    </svg>
+                </div>
+                <span class="free-badge">GRATUIT</span>
             </div>
-            <div class="banner-action">
-                <a href="https://hostino.ma/" target="_blank" class="btn btn-primary">Claim Free Domain & Hosting</a>
+
+            <!-- Center: Text content -->
+            <div class="promo-content">
+                <div class="promo-tag">
+                    <span class="promo-dot"></span>
+                    <span>Offre exclusive Hostino</span>
+                </div>
+                <h2 class="promo-title">
+                    Votre domaine <span class="highlight">.ma</span> offert
+                </h2>
+                <p class="promo-desc">
+                    Souscrivez à un plan d'hébergement Hostino et recevez votre domaine <strong>.ma gratuit</strong> pendant 1 an. Nom de domaine + hébergement + SSL inclus.
+                </p>
+
+                <!-- Features mini -->
+                <div class="promo-features">
+                    <div class="feature">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        <span>Domaine .ma offert 1 an</span>
+                    </div>
+                    <div class="feature">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        <span>Hébergement SSD rapide</span>
+                    </div>
+                    <div class="feature">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        <span>Certificat SSL inclus</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Right: CTA -->
+            <div class="promo-cta">
+                <div class="price-info">
+                    <span class="price-old">299 DH</span>
+                    <span class="price-new">0 DH</span>
+                    <span class="price-period">/ 1ère année</span>
+                </div>
+                <a href="https://hostino.ma/" target="_blank" rel="noopener" class="btn-promo">
+                    <span>Profiter de l'offre</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <span class="cta-note">* Offre limitée, sans engagement</span>
+            </div>
+
         </div>
     </div>
 </section>
 
 <style>
-    .bg-primary-light {
-        background-color: #f0f4ff; /* Light shade of primary */
+    /* ============ SECTION ============ */
+    .promo-section {
+        position: relative;
         padding: 4rem 0;
+        overflow: hidden;
     }
 
-    .banner-content {
-        display: flex;
-        justify-content: space-between;
+    /* Decorative background */
+    .promo-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.3;
+    }
+
+    .orb-1 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(81, 112, 255, 0.4) 0%, transparent 70%);
+        top: -100px;
+        left: -100px;
+    }
+
+    .orb-2 {
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(115, 138, 255, 0.35) 0%, transparent 70%);
+        bottom: -80px;
+        right: -80px;
+    }
+
+    .grid-dots {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(81, 112, 255, 0.15) 1px, transparent 1px);
+        background-size: 24px 24px;
+        mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+        -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 100%);
+        opacity: 0.5;
+    }
+
+    /* ============ CARD ============ */
+    .promo-card {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
-        gap: 2rem;
-        background: white;
-        padding: 3rem;
+        gap: 3rem;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.9);
         border-radius: var(--border-radius);
-        border: 1px solid var(--color-border);
-        box-shadow: 0 10px 15px -3px rgba(81, 112, 255, 0.1);
+        padding: 3rem;
+        box-shadow: 
+            0 20px 60px -12px rgba(31, 38, 135, 0.15),
+            0 0 0 1px rgba(81, 112, 255, 0.08);
+        overflow: hidden;
     }
 
-    .banner-text h2 {
-        font-size: 2rem;
+    /* Top gradient border */
+    .promo-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--color-primary), #738aff, #9fb0ff);
+    }
+
+    /* ============ VISUAL (GIFT ICON) ============ */
+    .promo-visual {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gift-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--color-primary), #738aff);
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 
+            0 12px 32px -8px rgba(81, 112, 255, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    .free-badge {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        padding: 0.35rem 0.75rem;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        font-size: 0.6875rem;
         font-weight: 700;
-        color: var(--color-text);
-        margin-bottom: 0.75rem;
+        letter-spacing: 0.05em;
+        border-radius: 9999px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        animation: pulse-badge 2s ease-in-out infinite;
     }
 
-    .banner-text p {
-        color: var(--color-text-muted);
-        font-size: 1.125rem;
-        max-width: 600px;
+    @keyframes pulse-badge {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        50% { 
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+    }
+
+    /* ============ CONTENT ============ */
+    .promo-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .promo-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        background: rgba(81, 112, 255, 0.08);
+        border: 1px solid rgba(81, 112, 255, 0.15);
+        border-radius: 9999px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        align-self: flex-start;
+    }
+
+    .promo-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(81, 112, 255, 0.2);
+    }
+
+    .promo-title {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--color-text);
+        letter-spacing: -0.02em;
         margin: 0;
     }
 
-    .banner-action {
+    .promo-title .highlight {
+        position: relative;
+        display: inline-block;
+        color: var(--color-primary);
+    }
+
+    .promo-title .highlight::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2px;
+        height: 8px;
+        background: linear-gradient(90deg, rgba(81, 112, 255, 0.2), rgba(115, 138, 255, 0.2));
+        z-index: -1;
+        border-radius: 4px;
+    }
+
+    .promo-desc {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--color-text-muted);
+        margin: 0;
+        max-width: 540px;
+    }
+
+    .promo-desc strong {
+        color: var(--color-text);
+        font-weight: 600;
+    }
+
+    /* Mini features */
+    .promo-features {
+        display: flex;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
+    .feature {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+    }
+
+    .feature svg {
+        color: #10b981;
         flex-shrink: 0;
     }
 
-    @media (max-width: 768px) {
-        .banner-content {
-            flex-direction: column;
+    /* ============ CTA SECTION ============ */
+    .promo-cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        flex-shrink: 0;
+        text-align: center;
+        min-width: 180px;
+    }
+
+    .price-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .price-old {
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+        text-decoration: line-through;
+        font-weight: 500;
+    }
+
+    .price-new {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--color-primary);
+        letter-spacing: -0.03em;
+        line-height: 1;
+        font-feature-settings: "tnum";
+    }
+
+    .price-period {
+        font-size: 0.8125rem;
+        color: var(--color-text-muted);
+        font-weight: 500;
+    }
+
+    .btn-promo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.9rem 1.75rem;
+        background: linear-gradient(135deg, var(--color-primary), #738aff);
+        color: white;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 9999px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 20px -4px rgba(81, 112, 255, 0.5);
+        white-space: nowrap;
+        width: 100%;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-promo::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+
+    .btn-promo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -4px rgba(81, 112, 255, 0.6);
+    }
+
+    .btn-promo:hover::before {
+        transform: translateX(100%);
+    }
+
+    .btn-promo svg {
+        transition: transform 0.25s ease;
+    }
+
+    .btn-promo:hover svg {
+        transform: translateX(3px);
+    }
+
+    .cta-note {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        opacity: 0.8;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 960px) {
+        .promo-card {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
-            padding: 2rem;
+        }
+
+        .promo-visual {
+            order: 1;
+            justify-content: center;
+        }
+
+        .promo-content {
+            order: 2;
+            align-items: center;
+        }
+
+        .promo-tag {
+            align-self: center;
+        }
+
+        .promo-features {
+            justify-content: center;
+        }
+
+        .promo-cta {
+            order: 3;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .btn-promo {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .promo-section {
+            padding: 3rem 0;
+        }
+
+        .promo-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .gift-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .gift-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .price-new {
+            font-size: 2rem;
+        }
+
+        .promo-features {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .feature {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* ============ REDUCED MOTION ============ */
+    @media (prefers-reduced-motion: reduce) {
+        .gift-icon,
+        .free-badge,
+        .btn-promo {
+            animation: none;
+            transition: none;
         }
     }
 </style>
