@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Chatbot from '../components/Chatbot.astro';
 
 interface Props {
 	title?: string;
@@ -26,6 +27,7 @@ const { title } = Astro.props;
         <div class="bg-mesh"></div>
         <Header />
 		<slot />
+        <Chatbot />
 	</body>
 </html>
 
