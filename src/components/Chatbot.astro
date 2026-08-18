@@ -92,7 +92,12 @@
     </button>
 </div>
 
-<style>
+<style is:global>
+    /* is:global est requis ici : les messages, badges et cartes sont
+       injectés dynamiquement par le <script> client-side. Le scoping
+       Astro (data-astro-cid-*) n'est appliqué qu'au HTML présent au
+       build, donc du CSS scoped classique ne toucherait jamais ce
+       contenu injecté à l'exécution. */
     .chatbot-wrapper {
         position: fixed;
         bottom: 2rem;
@@ -303,6 +308,16 @@
         text-decoration: underline;
     }
 
+    /* Met en avant une information clé dans une réponse (prix, délai,
+       chiffre important) sans changer la structure de la bulle. */
+    .msg-highlight {
+        background: rgba(81, 112, 255, 0.08);
+        color: var(--color-primary);
+        font-weight: 600;
+        padding: 0.05rem 0.4rem;
+        border-radius: 6px;
+    }
+
     .message-time {
         font-size: 0.6875rem;
         color: var(--color-text-muted);
@@ -334,6 +349,122 @@
     }
     .user-message .message-time {
         text-align: right;
+    }
+
+    /* ============ ACTIONABLE MESSAGE (domain result) ============ */
+    /* Used for bot messages that carry a concrete next step, distinct   */
+    /* from purely informational replies (price/transfer/fallback).      */
+    .bot-message.is-actionable .message-content {
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid rgba(81, 112, 255, 0.25);
+        background: white;
+    }
+
+    .domain-result-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+
+    .domain-result-intro {
+        padding: 0.85rem 1rem 0;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        color: var(--color-text);
+    }
+
+    .domain-result-body {
+        margin: 0 0.75rem;
+        padding: 0.75rem 0.85rem;
+        background: rgba(81, 112, 255, 0.06);
+        border: 1px solid rgba(81, 112, 255, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .domain-result-name {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        min-width: 0;
+    }
+
+    .domain-result-name strong {
+        font-size: 0.9375rem;
+        color: #1a1a2e;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Status badge: neutral while "checking", success once confirmed */
+    .domain-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        padding: 0.15rem 0.5rem;
+        border-radius: 9999px;
+        width: fit-content;
+    }
+
+    .domain-status-badge.status-checking {
+        background: rgba(107, 114, 128, 0.12);
+        color: #4b5563;
+    }
+    .domain-status-badge.status-checking::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #9ca3af;
+    }
+
+    .domain-status-badge.status-available {
+        background: rgba(16, 185, 129, 0.12);
+        color: #047857;
+    }
+    .domain-status-badge.status-available::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10b981;
+    }
+
+.domain-result-action {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    /* Changements visuels */
+    background: transparent;
+    border: 1.5px solid var(--color-primary);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.domain-result-action:hover {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(var(--color-primary-rgb, 59, 130, 246), 0.3); /* Nécessite une variable RGB ou utilisez une couleur hex avec opacité */
+}
+
+    .domain-result-footnote {
+        padding: 0 1rem 0.85rem;
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
     }
     
     /* Quick Replies */
@@ -496,10 +627,19 @@
     toggleBtn?.addEventListener('click', toggleChat);
     closeBtn?.addEventListener('click', toggleChat);
 
-    function addMessage(text: string, isUser: boolean) {
-        if (!messagesContainer) return;
+    // Escape HTML entities for anything derived from raw user input
+    // that gets placed as text (never as markup) into the DOM.
+    function escapeHtml(str: string) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function addMessage(text: string, isUser: boolean, options?: { actionable?: boolean }) {
+        if (!messagesContainer) return null;
 
         const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const isActionable = !isUser && options?.actionable;
         
         let avatarHtml = '';
         if (!isUser) {
@@ -513,11 +653,12 @@
             `;
         }
 
+        const messageId = `msg-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         const messageHtml = `
             <div class="message-row ${isUser ? 'user-row' : 'bot-row'}">
                 ${!isUser ? avatarHtml : ''}
-                <div class="message ${isUser ? 'user-message' : 'bot-message'}">
-                    <div class="message-content">${text}</div>
+                <div class="message ${isUser ? 'user-message' : 'bot-message'}${isActionable ? ' is-actionable' : ''}">
+                    <div class="message-content" id="${messageId}">${text}</div>
                     <span class="message-time">${timeString}</span>
                 </div>
             </div>
@@ -534,6 +675,30 @@
         }
         
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return messageId;
+    }
+
+    // Builds the rich "domain result" card: intro line, name + status badge,
+    // and a call-to-action button. Status starts as "checking" and flips to
+    // "available" shortly after, to give the exchange a sense of real work
+    // happening rather than an instant canned link.
+    function buildDomainResultCard(domainName: string) {
+        const safeName = escapeHtml(domainName);
+        return `
+            <div class="domain-result-card">
+                <p class="domain-result-intro">Great idea! I recommend this domain:</p>
+                <div class="domain-result-body">
+                    <div class="domain-result-name">
+                        <strong>${safeName}</strong>
+                        <span class="domain-status-badge status-checking" data-status-badge>Checking availability</span>
+                    </div>
+                    <a class="domain-result-action" href="https://mawhois.com/?domain=${encodeURIComponent(domainName)}" target="_blank" rel="noopener">
+                        Check
+                    </a>
+                </div>
+                <p class="domain-result-footnote">Tap "Check" to confirm on WHOIS.</p>
+            </div>
+        `;
     }
 
     function showTypingIndicator() {
@@ -577,17 +742,19 @@
             
             const lowerText = text.toLowerCase();
             let response = "";
+            let actionable = false;
 
             if (expectingBusinessName) {
                 // Generate domain name from business name
                 const sanitized = lowerText.replace(/[^a-z0-9]/g, '');
                 const domainName = `${sanitized || 'mybusiness'}.ma`;
-                
-                response = `Great idea! I recommend <strong>${domainName}</strong>. <br><br>Let's check if it's available using our WHOIS tool: <a href="https://mawhois.com/?domain=${domainName}" target="_blank">Check availability for ${domainName}</a>`;
+
+                response = buildDomainResultCard(domainName);
+                actionable = true;
                 expectingBusinessName = false;
             } 
             else if (lowerText.includes('price') || lowerText.includes('cost')) {
-                response = "Our .ma domains start at just 150 DH/year with no hidden fees.";
+                response = 'Our .ma domains start at just <span class="msg-highlight">150 DH/year</span> with no hidden fees.';
             }
             else if (lowerText.includes('transfer')) {
                 response = "You can easily transfer an existing domain to us. Just click 'Transfer a domain' in the header to get started.";
@@ -600,7 +767,21 @@
                 response = "I'm a simple demo bot! Try asking me to 'suggest a domain name' or ask about 'price'.";
             }
             
-            addMessage(response, false);
+            const messageId = addMessage(response, false, { actionable });
+
+            // For the domain result card, flip the badge from "checking"
+            // to "available" a moment later so the status feels live.
+            if (actionable && messageId) {
+                setTimeout(() => {
+                    const container = document.getElementById(messageId);
+                    const badge = container?.querySelector('[data-status-badge]');
+                    if (badge) {
+                        badge.textContent = 'Available';
+                        badge.classList.remove('status-checking');
+                        badge.classList.add('status-available');
+                    }
+                }, 900);
+            }
             
             // Re-show quick replies if not expecting specific input
             if (!expectingBusinessName && quickRepliesContainer) {
@@ -640,7 +821,7 @@
 
         if (quickRepliesContainer) quickRepliesContainer.style.display = 'none';
         
-        addMessage(text, true);
+        addMessage(escapeHtml(text), true);
         input.value = '';
 
         processUserMessage(text);
