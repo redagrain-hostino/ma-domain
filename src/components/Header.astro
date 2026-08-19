@@ -9,7 +9,7 @@ interface Props {
 const { transparent = false } = Astro.props;
 
 const navItems = [
-    { label: 'Accueil', href: '/' },
+    { label: 'Home', href: '/' },
     {
         label: 'Services',
         href: '#',
@@ -20,8 +20,8 @@ const navItems = [
             { label: 'Certificats SSL', href: '#ssl' },
         ]
     },
-    { label: 'Tarifs', href: '#pricing' },
-    { label: 'Gratuit', href: '#free', badge: 'New' },
+    { label: 'Pricing', href: '#pricing' },
+    { label: 'Free', href: '#free', badge: 'New' },
     { label: 'WHOIS', href: 'https://mawhois.com/', external: true },
     { label: 'Blog', href: '/blog' },
 ];
@@ -48,16 +48,16 @@ const currentLang = (() => {
     <div class="container header-container">
 
         <!-- Logo -->
-        <a href="/" class="logo-link" aria-label="Retour à l'accueil">
+        <a href="/" class="logo-link" aria-label="Back to home">
             <img src={maLogo.src} alt="" class="logo-img" />
             <div class="logo-text">
                 <span class="logo-name">.ma</span>
-                <span class="logo-tag">Registre Maroc</span>
+                <span class="logo-tag">Morocco Registry</span>
             </div>
         </a>
 
         <!-- Desktop Navigation -->
-        <nav class="nav-menu" aria-label="Navigation principale">
+        <nav class="nav-menu" aria-label="Main navigation">
             {navItems.map((item) => (
                 item.children ? (
                     <div class="nav-dropdown">
@@ -113,7 +113,7 @@ const currentLang = (() => {
                         <path d="m6 9 6 6 6-6"/>
                     </svg>
                 </button>
-                <div class="lang-panel" role="listbox" aria-label="Choisir la langue">
+                <div class="lang-panel" role="listbox" aria-label="Choose language">
                     <div class="lang-grid">
                         {languages.map((lang) => (
                             <a
@@ -137,15 +137,15 @@ const currentLang = (() => {
                 </div>
             </div>
 
-            <a href="https://hostino.ma/" target="_blank" rel="noopener" class="btn-cta">
-                <span>Enregistrer .ma</span>
+            <a href="/register-ma-domain" class="btn-cta">
+                <span>Register .ma</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </a>
 
             <!-- Mobile Menu Toggle -->
-            <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+            <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">
                 <span class="bar bar-1"></span>
                 <span class="bar bar-2"></span>
                 <span class="bar bar-3"></span>
@@ -202,8 +202,8 @@ const currentLang = (() => {
                     </div>
                 </div>
 
-                <a href="https://hostino.ma/" target="_blank" rel="noopener" class="mobile-cta">
-                    <span>Enregistrer .ma</span>
+                <a href="/register-ma-domain" class="mobile-cta">
+                    <span>Register .ma</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
@@ -254,7 +254,7 @@ const currentLang = (() => {
         opacity: 0.8;
     }
 
-    .logo-img {
+.logo-img {
         height: 42px;
         width: auto;
         display: block;
