@@ -1,10 +1,12 @@
 ---
 // Footer.astro
+import maLogo from '../assets/ma-logo.png';
+
 const year = new Date().getFullYear();
 
 const services = [
-    { label: 'Register a domain', href: 'https://hostino.ma/', external: true },
-    { label: 'Transfer a domain', href: 'https://hostino.ma/', external: true },
+    { label: 'Register a Domain', href: 'https://hostino.ma/', external: true },
+    { label: 'Transfer a Domain', href: 'https://hostino.ma/', external: true },
     { label: 'WHOIS Lookup', href: 'https://mawhois.com/', external: true },
     { label: 'Web Hosting', href: 'https://hostino.ma/', external: true },
     { label: 'SSL Certificates', href: '#' },
@@ -12,7 +14,7 @@ const services = [
 ];
 
 const company = [
-    { label: 'About us', href: '#' },
+    { label: 'About Us', href: '#' },
     { label: 'ANRT Regulations', href: '#' },
     { label: 'Terms of Service', href: '#' },
     { label: 'Privacy Policy', href: '#' },
@@ -23,8 +25,8 @@ const company = [
 const support = [
     { label: 'Help Center', href: '#' },
     { label: 'FAQ', href: '#' },
-    { label: 'Open a ticket', href: '#' },
-    { label: 'System Status', href: '#' },
+    { label: 'Open a Ticket', href: '#' },
+    { label: 'Service Status', href: '#' },
     { label: 'Documentation', href: '#' },
 ];
 
@@ -57,9 +59,10 @@ const icons = {
             <div class="newsletter-content">
                 <div class="newsletter-text">
                     <h3>Stay Informed</h3>
-                    <p>Receive the latest news about .ma domains and digital trends in Morocco.</p>
+                    <p>Get the latest news on .ma domains and digital innovation in Morocco.</p>
+
                 </div>
-                <form class="newsletter-form" aria-label="Inscription newsletter">
+                <form class="newsletter-form" aria-label="Newsletter subscription">
                     <div class="form-field">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -68,7 +71,8 @@ const icons = {
                         <input 
                             type="email" 
                             placeholder="your@email.com" 
-                            aria-label="Adresse email"
+                            aria-label="Email address"
+
                             required
                         >
                     </div>
@@ -88,8 +92,8 @@ const icons = {
             <!-- Brand Column -->
             <div class="footer-brand">
                 <a href="/" class="footer-logo">
-                    <div class="logo-mark">
-                        <span>.ma</span>
+                    <div>
+                        <img src={maLogo.src} alt="" class="logo-img" />
                     </div>
                     <div class="logo-text">
                         <span class="logo-name">Morocco Registry</span>
@@ -215,7 +219,7 @@ const icons = {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
-                <span>Support 24/7</span>
+                <span>24/7 Support</span>
             </div>
         </div>
 
@@ -282,6 +286,11 @@ const icons = {
     .container {
         position: relative;
         z-index: 1;
+    }
+    .logo-img {
+        height: 42px;
+        width: auto;
+        display: block;
     }
 
     /* ============ PRE-FOOTER (NEWSLETTER) ============ */

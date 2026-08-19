@@ -1,0 +1,912 @@
+---
+// src/pages/identity-verification.astro
+import Layout from '../layouts/Layout.astro';
+
+const steps = [
+  { number: '01', title: 'Choose Domain', desc: 'Select the .ma domain you want to register.' },
+  { number: '02', title: 'Prepare Documents', desc: 'Gather your valid ID or company registration papers.' },
+  { number: '03', title: 'ANRT Review', desc: 'Your information is securely reviewed by the ANRT.' },
+  { number: '04', title: 'Activation', desc: 'Once approved, your domain is activated instantly.' }
+];
+
+const documents = {
+  individuals: [
+    { title: 'Moroccan National ID', desc: 'Clear, valid copy of your CIN (Recto/Verso).', icon: 'id' },
+    { title: 'Passport', desc: 'Valid passport for non-resident Moroccan citizens.', icon: 'passport' }
+  ],
+  companies: [
+    { title: 'Registre de Commerce', desc: 'Official company registration certificate (RC).', icon: 'building' },
+    { title: 'IF & ICE', desc: 'Tax identification and common company identifier.', icon: 'file' }
+  ]
+};
+
+const docExplanations = {
+  cin: 'Used to verify the identity of an individual domain holder.',
+  passport: 'May be used as an alternative identity document where applicable.',
+  rc: 'Used to validate company registration information.',
+  ice: 'Used to identify the registered business entity.'
+};
+
+const benefits = [
+  { title: 'Security', desc: 'Protect domain ownership and prevent unauthorized takeovers.', icon: 'shield' },
+  { title: 'Trust', desc: 'Maintain a reliable and credible .ma domain ecosystem.', icon: 'badge' },
+  { title: 'Compliance', desc: 'Follow Moroccan ANRT domain registration regulations.', icon: 'scale' },
+  { title: 'Protection', desc: 'Reduce fraudulent, abusive, or cybersquatting registrations.', icon: 'lock' }
+];
+
+const faqs = [
+  { q: 'Why do I need to verify my identity?', a: 'The ANRT requires identity verification for all .ma domain registrations to ensure accountability, prevent fraud, and maintain the integrity of the Moroccan digital space.' },
+  { q: 'What documents are accepted?', a: 'For individuals: A valid Moroccan National ID (CIN) or Passport. For companies: Recent Registre de Commerce (RC), Identifiant Fiscal (IF), and ICE documents.' },
+  { q: 'How long does verification take?', a: 'Most verifications are processed within 24 to 48 business hours. Complex corporate structures may take up to 3 business days.' },
+  { q: 'Can I register a .ma domain as a company?', a: 'Yes. You will need to provide the company\'s official registration documents and the identity of the legal representative.' }
+];
+
+const icons = {
+  shield: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  badge: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>`,
+  scale: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>`,
+  lock: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  alert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  chevron: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>`
+};
+
+const cinMockup = `
+  <div class="cin-top">
+    <div class="cin-top-fr">
+      <span class="cin-fr-1">ROYAUME DU MAROC</span>
+      <span class="cin-fr-2">CARTE NATIONALE D'IDENTITÉ</span>
+    </div>
+    <div class="cin-emblem" aria-hidden="true">
+      <svg viewBox="0 0 40 40" width="34" height="34">
+        <circle cx="20" cy="20" r="15" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <circle cx="20" cy="20" r="11" fill="none" stroke="#c9a227" stroke-width="1"/>
+        <path d="M20 12l2.3 4.9 5.4.6-4 3.7 1.1 5.3-4.8-2.7-4.8 2.7 1.1-5.3-4-3.7 5.4-.6z" fill="none" stroke="#0e6b4f" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="cin-top-ar" dir="rtl">
+      <span>المملكة المغربية</span>
+      <span>البطاقة الوطنية للتعريف</span>
+    </div>
+  </div>
+  <div class="cin-body">
+    <div class="cin-watermark" aria-hidden="true">
+      <svg viewBox="0 0 60 90" width="64" height="96">
+        <g fill="none" stroke="#9db8a8" stroke-width="2" opacity="0.45">
+          <rect x="22" y="18" width="16" height="60"/>
+          <rect x="18" y="78" width="24" height="8"/>
+          <path d="M22 18h16M24 26h12M24 34h12M24 42h12M24 50h12M24 58h12M24 66h12"/>
+          <rect x="26" y="6" width="8" height="12"/><path d="M30 0v6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="cin-left">
+      <div class="cin-photo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="46" height="46"><path d="M12 12c2.7 0 4.5-2 4.5-4.5S14.7 3 12 3 7.5 5 7.5 7.5 9.3 12 12 12zm0 2c-4 0-8 2-8 6v1h16v-1c0-4-4-6-8-6z" fill="#fff"/></svg>
+      </div>
+      <div class="cin-fields">
+        <div class="cin-line"><span class="cin-lbl">Né le</span><span class="cin-val">XX/XX/XXXX</span></div>
+        <div class="cin-line"><span class="cin-lbl">Nom & Prénom</span><span class="cin-val">SAMPLE USER</span></div>
+        <div class="cin-line"><span class="cin-lbl">Lieu de naissance</span><span class="cin-val">SAMPLE CITY</span></div>
+      </div>
+      <div class="cin-flag" aria-hidden="true">
+        <svg viewBox="0 0 30 20" width="36" height="24"><rect width="30" height="20" rx="2" fill="#c1272d"/><path d="M15 5l1.8 4.2 4.6.4-3.5 3 1 4.5-3.9-2.4-3.9 2.4 1-4.5-3.5-3 4.6-.4z" fill="none" stroke="#0e6b4f" stroke-width="1.2"/></svg>
+      </div>
+    </div>
+    <div class="cin-green" dir="rtl">
+      <div class="cin-ar-line"><span>تاريخ الازدياد</span><strong>XX/XX/XXXX</strong></div>
+      <div class="cin-ar-line"><span>الاسم الشخصي والعائلي</span><strong>SAMPLE USER</strong></div>
+      <div class="cin-ar-line"><span>محل الازدياد</span><strong>SAMPLE CITY</strong></div>
+      <div class="cin-photo-sm" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 12c2.7 0 4.5-2 4.5-4.5S14.7 3 12 3 7.5 5 7.5 7.5 9.3 12 12 12zm0 2c-4 0-8 2-8 6v1h16v-1c0-4-4-6-8-6z" fill="#fff"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="cin-bottom">
+    <span class="cin-num">N° <strong>XXXXXXXX</strong> <span dir="rtl">رقم</span></span>
+    <span class="cin-valid">Valable jusqu'au : <strong>XX/XX/XXXX</strong></span>
+  </div>
+`;
+
+const ppMockup = `
+  <div class="pp-frame" aria-hidden="true"></div>
+  <div class="pp-top">ROYAUME DU MAROC</div>
+  <div class="pp-emblem" aria-hidden="true">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 4l1.8 4 4.2.4-3.2 2.9 1 4.2L12 17l-3.8 2.5 1-4.2-3.2-2.9 4.2-.4z"/></svg>
+  </div>
+  <div class="pp-word">PASSPORT</div>
+  <div class="pp-sub">PASSEPORT</div>
+  <div class="pp-data">
+    <div class="pp-row"><span>No.</span><strong>XXXXXXX</strong></div>
+    <div class="pp-row"><span>NAME</span><strong>SAMPLE USER</strong></div>
+    <div class="pp-row"><span>DOB</span><strong>XX/XX/XXXX</strong></div>
+  </div>
+  <div class="pp-mrz" aria-hidden="true">P&lt;MARSAMPLE&lt;&lt;USER&lt;&lt;&lt;&lt;&lt;&lt;XXXX</div>
+`;
+
+const rcMockup = `
+  <div class="rc-frame" aria-hidden="true"></div>
+  <div class="rc-header">
+    <div class="rc-seal" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><path d="M12 3v18M3 12h18"/></svg>
+    </div>
+    <div class="rc-title">REGISTRE DE COMMERCE</div>
+    <div class="rc-sub">TRIBUNAL DE COMMERCE</div>
+    <div class="rc-stamp" aria-hidden="true">VERIFIED ✓</div>
+  </div>
+  <div class="rc-rows">
+    <div class="rc-row"><span>Company</span><strong>SAMPLE COMPANY SARL</strong></div>
+    <div class="rc-row"><span>RC</span><strong>XXXXXXXX</strong></div>
+    <div class="rc-row"><span>ICE</span><strong>XXXXXXXXXXXXXXXX</strong></div>
+    <div class="rc-row"><span>Legal Form</span><strong>SARL</strong></div>
+    <div class="rc-row"><span>Status</span><strong class="rc-active">ACTIVE</strong></div>
+    <div class="rc-row"><span>Registration</span><strong>XX/XX/XXXX</strong></div>
+  </div>
+`;
+
+const iceMockup = `
+  <div class="ice-header">
+    <span class="ice-icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4M7 12h10M7 16h7"/></svg>
+    </span>
+    <span class="ice-title">BUSINESS IDENTIFICATION</span>
+    <span class="ice-live">● ACTIVE</span>
+  </div>
+  <div class="ice-barcode" aria-hidden="true">
+    <svg width="100%" height="24" viewBox="0 0 200 24" preserveAspectRatio="none">
+      <g fill="currentColor"><rect x="0" width="2" height="24"/><rect x="5" width="1" height="24"/><rect x="9" width="3" height="24"/><rect x="15" width="1" height="24"/><rect x="19" width="2" height="24"/><rect x="24" width="1" height="24"/><rect x="28" width="3" height="24"/><rect x="34" width="2" height="24"/><rect x="39" width="1" height="24"/><rect x="43" width="2" height="24"/><rect x="48" width="3" height="24"/><rect x="54" width="1" height="24"/><rect x="58" width="2" height="24"/><rect x="63" width="1" height="24"/><rect x="67" width="3" height="24"/><rect x="73" width="2" height="24"/><rect x="78" width="1" height="24"/><rect x="82" width="2" height="24"/><rect x="87" width="3" height="24"/><rect x="93" width="1" height="24"/><rect x="97" width="2" height="24"/><rect x="102" width="1" height="24"/><rect x="106" width="3" height="24"/><rect x="112" width="2" height="24"/><rect x="117" width="1" height="24"/><rect x="121" width="2" height="24"/><rect x="126" width="3" height="24"/><rect x="132" width="1" height="24"/><rect x="136" width="2" height="24"/><rect x="141" width="1" height="24"/><rect x="145" width="3" height="24"/><rect x="151" width="2" height="24"/><rect x="156" width="1" height="24"/><rect x="160" width="2" height="24"/><rect x="165" width="3" height="24"/><rect x="171" width="1" height="24"/><rect x="175" width="2" height="24"/><rect x="180" width="1" height="24"/><rect x="184" width="3" height="24"/><rect x="190" width="2" height="24"/><rect x="195" width="1" height="24"/></g>
+    </svg>
+  </div>
+  <div class="ice-main">
+    <div class="ice-qr" aria-hidden="true">
+      <svg width="52" height="52" viewBox="0 0 11 11" shape-rendering="crispEdges">
+        <g fill="currentColor"><rect x="0" y="0" width="3" height="3"/><rect x="8" y="0" width="3" height="3"/><rect x="0" y="8" width="3" height="3"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/></g>
+      </svg>
+    </div>
+    <div class="ice-fields">
+      <div class="ice-field"><span>Company Name</span><strong>SAMPLE COMPANY</strong></div>
+      <div class="ice-field"><span>ICE</span><strong>XXXXXXXXXXXXXXXX</strong></div>
+      <div class="ice-field"><span>RC</span><strong>XXXXXXXX</strong></div>
+      <div class="ice-field"><span>Legal Form</span><strong>SARL</strong></div>
+    </div>
+  </div>
+  <div class="ice-footer">
+    <span>Status</span>
+    <strong class="ice-verified">VERIFIED ✓</strong>
+  </div>
+`;
+---
+
+<Layout title="Identity Verification | .ma Domain Registration">
+  <main class="hv-page">
+
+    <!-- ============ HERO (mirrors Hero.astro exactly) ============ -->
+    <section class="hv-hero" aria-labelledby="hv-hero-title">
+      <div class="hero-decor" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-grid">
+          <!-- LEFT -->
+          <div class="hero-content">
+            <div class="badge fade-in" style="--delay: 0.1s">
+              <span class="badge-dot"></span>
+              <span>ANRT compliant verification</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+
+            <h1 class="hero-title fade-in" id="hv-hero-title" style="--delay: 0.2s">
+              Verify your identity
+              <span class="gradient-text">for your .ma</span>
+              domain
+            </h1>
+
+            <p class="hero-subtitle fade-in" style="--delay: 0.3s">
+              All .ma domain registrations require a brief, secure identity verification in line with Moroccan ANRT regulations. Prepare your documents and go live with confidence.
+            </p>
+
+            <div class="secondary-links fade-in" style="--delay: 0.4s; margin-bottom: 1.5rem;">
+              <a href="/register" class="search-submit">
+                <span>Start Verification</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+              <a href="/search" class="ghost-link">
+                <span>Check Domain Availability</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M7 7h10v10"/>
+                </svg>
+              </a>
+            </div>
+
+            <div class="trust-row fade-in" style="--delay: 0.5s">
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Secure & Encrypted</span>
+              </div>
+              <span class="trust-dot" aria-hidden="true"></span>
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <span>Fast Processing</span>
+              </div>
+              <span class="trust-dot" aria-hidden="true"></span>
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                <span>ANRT Approved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: visual stack (matching Hero.astro) -->
+          <div class="hero-visual fade-in" style="--delay: 0.3s" aria-hidden="true">
+            <div class="visual-stack">
+              <div class="cin-stack">
+                <div class="cin-card cin-back" set:html={cinMockup}></div>
+                <div class="cin-card cin-front" set:html={cinMockup}></div>
+              </div>
+
+              <div class="float-card float-1">
+                <span class="mini-dot green"></span>
+                <span class="mini-domain">CIN Verified</span>
+              </div>
+              <div class="float-card float-2">
+                <span class="mini-dot green"></span>
+                <span class="mini-domain">ANRT Approved</span>
+              </div>
+              <div class="float-card float-3">
+                <span class="mini-dot orange"></span>
+                <span class="mini-domain">Reviewing…</span>
+              </div>
+
+              <div class="ext-pill ext-1">.ma</div>
+              <div class="ext-pill ext-2">.co.ma</div>
+              <div class="ext-pill ext-3">.org.ma</div>
+              <div class="ext-pill ext-4">.edu.ma</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROCESS STEPS ============ -->
+    <section class="hv-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>How verification works</h2>
+          <p>A simple, secure, and transparent process to get your domain online.</p>
+        </div>
+
+        <div class="hv-steps">
+          {steps.map((s, i) => (
+            <div class="hv-step fade-in" style={`--delay: ${0.15 + i * 0.08}s`}>
+              <div class="step-number">{s.number}</div>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DOCUMENTS ============ -->
+    <section class="hv-section hv-docs-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Documents required for <span class="gradient-text">.ma verification</span></h2>
+          <p>Depending on your profile, ANRT may require identity or company documentation to validate your .ma domain registration.</p>
+          <div class="hv-legend" aria-hidden="true">
+            <span class="hv-legend-item"><span class="hv-dot hv-dot-ind"></span> Individuals</span>
+            <span class="hv-legend-item"><span class="hv-dot hv-dot-com"></span> Companies</span>
+          </div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="hv-flow fade-in" style="--delay: 0.15s">
+          <div class="hv-flow-step">
+            <div class="hv-flow-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <span>Uploaded</span>
+          </div>
+          <div class="hv-flow-line" aria-hidden="true"></div>
+          <div class="hv-flow-step">
+            <div class="hv-flow-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            <span>Identity check</span>
+          </div>
+          <div class="hv-flow-line" aria-hidden="true"></div>
+          <div class="hv-flow-step">
+            <div class="hv-flow-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span>ANRT review</span>
+          </div>
+          <div class="hv-flow-line" aria-hidden="true"></div>
+          <div class="hv-flow-step hv-flow-final">
+            <div class="hv-flow-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span>Verified ✓</span>
+          </div>
+        </div>
+
+        <!-- Bento -->
+        <div class="hv-bento">
+
+          <!-- CIN hero -->
+          <article class="hv-doc hv-doc-hero fade-in" style="--delay: 0.2s">
+            <div class="hv-doc-top">
+              <span class="hv-tag hv-tag-ind">For individuals</span>
+              <span class="hv-doc-badge">Primary document</span>
+            </div>
+            <div class="hv-doc-stage">
+              <div class="hv-scanline" aria-hidden="true"></div>
+              <div class="cin-card cin-inline" role="img" aria-label="Sample preview of a Moroccan National ID card" set:html={cinMockup}></div>
+            </div>
+            <div class="hv-status" aria-hidden="true">
+              <span class="st-idle">Preview Mode</span>
+              <span class="st-verify">VERIFYING DOCUMENT…</span>
+              <span class="st-done">DOCUMENT FORMAT ✓</span>
+            </div>
+            <div class="hv-doc-info">
+              <h3>{documents.individuals[0].title} (CIN)</h3>
+              <p>{docExplanations.cin}</p>
+            </div>
+          </article>
+
+          <!-- Passport -->
+          <article class="hv-doc hv-doc-tall fade-in" style="--delay: 0.28s">
+            <div class="hv-doc-top">
+              <span class="hv-tag hv-tag-ind">For individuals</span>
+              <span class="hv-doc-badge">Alternative</span>
+            </div>
+            <div class="hv-doc-stage">
+              <div class="hv-scanline" aria-hidden="true"></div>
+              <div class="pp-card" role="img" aria-label="Sample preview of a Moroccan passport" set:html={ppMockup}></div>
+            </div>
+            <div class="hv-status" aria-hidden="true">
+              <span class="st-idle">Preview Mode</span>
+              <span class="st-verify">VERIFYING DOCUMENT…</span>
+              <span class="st-done">DOCUMENT FORMAT ✓</span>
+            </div>
+            <div class="hv-doc-info">
+              <h3>{documents.individuals[1].title}</h3>
+              <p>{docExplanations.passport}</p>
+            </div>
+          </article>
+
+          <!-- RC -->
+          <article class="hv-doc fade-in" style="--delay: 0.22s">
+            <div class="hv-doc-top">
+              <span class="hv-tag hv-tag-com">For companies</span>
+              <span class="hv-doc-badge">Required</span>
+            </div>
+            <div class="hv-doc-stage">
+              <div class="hv-scanline" aria-hidden="true"></div>
+              <div class="rc-card" role="img" aria-label="Sample preview of a Registre de Commerce certificate" set:html={rcMockup}></div>
+            </div>
+            <div class="hv-status" aria-hidden="true">
+              <span class="st-idle">Preview Mode</span>
+              <span class="st-verify">VERIFYING DOCUMENT…</span>
+              <span class="st-done">DOCUMENT FORMAT ✓</span>
+            </div>
+            <div class="hv-doc-info">
+              <h3>{documents.companies[0].title}</h3>
+              <p>{docExplanations.rc}</p>
+            </div>
+          </article>
+
+          <!-- ICE -->
+          <article class="hv-doc fade-in" style="--delay: 0.32s">
+            <div class="hv-doc-top">
+              <span class="hv-tag hv-tag-com">For companies</span>
+              <span class="hv-doc-badge">Required</span>
+            </div>
+            <div class="hv-doc-stage">
+              <div class="hv-scanline" aria-hidden="true"></div>
+              <div class="ice-card" role="img" aria-label="Sample preview of an ICE business identification document" set:html={iceMockup}></div>
+            </div>
+            <div class="hv-status" aria-hidden="true">
+              <span class="st-idle">Preview Mode</span>
+              <span class="st-verify">VERIFYING DOCUMENT…</span>
+              <span class="st-done">DOCUMENT FORMAT ✓</span>
+            </div>
+            <div class="hv-doc-info">
+              <h3>ICE</h3>
+              <p>{docExplanations.ice}</p>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="hv-disclaimer fade-in" style="--delay: 0.2s">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Document visuals are illustrative mockups with sample data only. They do not represent real documents or personal information.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ ANRT NOTICE ============ -->
+    <section class="hv-section">
+      <div class="container">
+        <div class="hv-notice fade-in" style="--delay: 0.1s">
+          <div class="hv-notice-icon" set:html={icons.alert}></div>
+          <div class="hv-notice-content">
+            <h3>Important ANRT Notice</h3>
+            <p>
+              <strong>.ma domains are subject to strict ANRT identity verification requirements.</strong>
+              Ensure all uploaded documents are clear, valid, and match the registrant information exactly.
+              Incomplete or mismatched information will result in verification delays.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENEFITS ============ -->
+    <section class="hv-section hv-benefits-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Why verification matters</h2>
+          <p>Protecting you and the Moroccan digital ecosystem.</p>
+        </div>
+        <div class="hv-benefits">
+          {benefits.map((b, i) => (
+            <div class="hv-benefit fade-in" style={`--delay: ${0.15 + i * 0.08}s`}>
+              <div class="hv-benefit-icon" set:html={icons[b.icon]}></div>
+              <h3>{b.title}</h3>
+              <p>{b.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="hv-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Frequently asked questions</h2>
+          <p>Everything you need to know about the .ma verification process.</p>
+        </div>
+        <div class="hv-faq">
+          {faqs.map((f, i) => (
+            <div class="hv-faq-item fade-in" style={`--delay: ${0.15 + i * 0.05}s`}>
+              <button class="hv-faq-q" aria-expanded="false" aria-controls={`hv-faq-${i}`}>
+                <span>{f.q}</span>
+                <span class="hv-faq-icon" set:html={icons.chevron}></span>
+              </button>
+              <div id={`hv-faq-${i}`} class="hv-faq-a" hidden><p>{f.a}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="hv-cta">
+      <div class="hero-decor" aria-hidden="true">
+        <div class="orb orb-1" style="background: radial-gradient(circle, hsla(229, 100%, 75%, 0.3) 0%, transparent 70%);"></div>
+        <div class="orb orb-2" style="background: radial-gradient(circle, hsla(229, 100%, 85%, 0.35) 0%, transparent 70%);"></div>
+      </div>
+      <div class="container">
+        <div class="hv-cta-card fade-in" style="--delay: 0.1s">
+          <h2>Ready to register your .ma domain?</h2>
+          <p>Complete your verification and get your Moroccan domain online today.</p>
+          <div class="hv-cta-actions">
+            <a href="/register" class="search-submit">
+              <span>Register a .ma Domain</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="/search" class="ghost-link" style="color: rgba(15, 23, 42, 0.7);">
+              <span>Check Domain Availability</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 17L17 7M7 7h10v10"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  /* ==========================================
+     DESIGN TOKENS (exact match to Hero.astro)
+     ========================================== */
+  .hv-page {
+    --color-primary: #5170ff;
+    --color-primary-light: #738aff;
+    --color-primary-lighter: #9fb0ff;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+    --color-bg: #ffffff;
+    --color-bg-alt: #f8fafc;
+    --border-radius: 24px;
+
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow-x: hidden;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+  .hv-section { padding: 5rem 0 6rem; position: relative; }
+
+  /* ==========================================
+     HERO (exact Hero.astro copy)
+     ========================================== */
+  .hv-hero { position: relative; padding: 5rem 0 6rem; overflow: hidden; }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; }
+  @media (min-width: 1024px) {
+    .hv-hero { padding: 6rem 0 7rem; }
+    .hero-grid { grid-template-columns: 1.15fr 0.85fr; gap: 5rem; }
+  }
+
+  .hero-decor { position: absolute; inset: 0; pointer-events: none; z-index: -1; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; }
+  .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, hsla(229,100%,75%,0.4) 0%, transparent 70%); top: -150px; left: -100px; }
+  .orb-2 { width: 450px; height: 450px; background: radial-gradient(circle, hsla(229,100%,85%,0.5) 0%, transparent 70%); bottom: -150px; right: -100px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(81,112,255,0.15); border-radius: 9999px; font-size: 0.8125rem; font-weight: 500; color: var(--color-primary); margin-bottom: 1.75rem; }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 0 4px rgba(81,112,255,0.15); animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px rgba(81,112,255,0.15); } 50% { box-shadow: 0 0 0 8px rgba(81,112,255,0); } }
+  .badge svg { color: var(--color-primary); transition: transform 0.25s ease; }
+  .badge:hover svg { transform: translateX(3px); }
+
+  .hero-title { font-size: clamp(2.25rem, 5.5vw, 3.75rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; color: var(--color-text); letter-spacing: -0.03em; }
+  .gradient-text { background: linear-gradient(135deg, var(--color-primary) 0%, #738aff 50%, #9fb0ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; position: relative; display: inline-block; }
+  .gradient-text::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(81,112,255,0.12), rgba(115,138,255,0.12)); z-index: -1; border-radius: 12px; filter: blur(16px); }
+  .hero-subtitle { font-size: 1.125rem; line-height: 1.7; color: var(--color-text-muted); margin-bottom: 2.5rem; max-width: 540px; font-weight: 400; }
+
+  .search-submit { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.75rem; background: linear-gradient(135deg, var(--color-primary) 0%, #738aff 100%); color: white; border: none; border-radius: 9999px; font-family: inherit; font-size: 0.9375rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(81,112,255,0.39); white-space: nowrap; }
+  .search-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(81,112,255,0.45); }
+  .search-submit:active { transform: translateY(0); }
+  .search-submit svg { transition: transform 0.25s ease; }
+  .search-submit:hover svg { transform: translateX(3px); }
+
+  .secondary-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+  .ghost-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted); transition: color 0.2s ease; text-decoration: none; padding: 0.25rem 0; }
+  .ghost-link:hover { color: var(--color-primary); }
+  .ghost-link svg { transition: transform 0.25s ease; }
+  .ghost-link:hover svg { transform: translate(2px, -2px); }
+
+  .trust-row { display: flex; align-items: center; gap: 1.125rem; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.875rem; color: var(--color-text-muted); font-weight: 500; }
+  .trust-item svg { color: var(--color-primary); flex-shrink: 0; }
+  .trust-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(2,37,69,0.2); }
+
+  /* Hero visual (matches Hero.astro) */
+  .hero-visual { position: relative; min-height: 520px; display: none; }
+  @media (min-width: 1024px) { .hero-visual { display: block; } }
+  .visual-stack { position: relative; width: 100%; height: 520px; }
+
+  .cin-stack { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 360px; }
+  .cin-back { position: absolute; inset: 0; transform: rotate(3deg) translate(18px, 14px); filter: brightness(0.94); opacity: 0.85; }
+  .cin-front { position: relative; transform: rotate(-2deg); animation: float-main 7s ease-in-out infinite; }
+  .cin-stack:hover .cin-front { transform: rotate(-1deg) translateY(-8px); transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+  @keyframes float-main { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(-2deg) translateY(-12px); } }
+
+  /* ==========================================
+     REALISTIC CIN (matching reference photo)
+     ========================================== */
+  .cin-card { width: 100%; aspect-ratio: 1.586 / 1; background: #fbfaf6; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 24px 55px rgba(15,40,30,0.35), 0 4px 12px rgba(15,40,30,0.18); }
+  .cin-top { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: linear-gradient(180deg, #f8c7c2, #f0aaa5); }
+  .cin-top-fr { flex: 1; display: flex; flex-direction: column; }
+  .cin-fr-1 { font-size: 0.62rem; font-weight: 800; color: #9e1b32; letter-spacing: 0.04em; }
+  .cin-fr-2 { font-size: 0.5rem; color: #9e1b32; letter-spacing: 0.06em; }
+  .cin-top-ar { flex: 1; display: flex; flex-direction: column; align-items: flex-end; color: #9e1b32; font-size: 0.6rem; font-weight: 700; line-height: 1.35; }
+  .cin-emblem { flex-shrink: 0; }
+  .cin-body { position: relative; flex: 1; display: flex; overflow: hidden; }
+  .cin-watermark { position: absolute; left: 46%; top: 50%; transform: translate(-50%,-50%); }
+  .cin-left { flex: 1; position: relative; display: flex; gap: 10px; padding: 10px 12px; }
+  .cin-photo { width: 68px; height: 84px; flex-shrink: 0; background: #c7c7c7; border-radius: 4px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+  .cin-fields { flex: 1; display: flex; flex-direction: column; gap: 6px; padding-top: 2px; }
+  .cin-line { display: flex; flex-direction: column; }
+  .cin-lbl { font-size: 0.5rem; color: #8a8a8a; }
+  .cin-val { font-size: 0.64rem; font-weight: 700; color: #333; font-family: ui-monospace, monospace; letter-spacing: 0.02em; }
+  .cin-flag { position: absolute; right: 12px; bottom: 10px; }
+  .cin-green { width: 36%; background: linear-gradient(180deg, #d6ecdd, #bcdcc8); border-left: 1px solid rgba(14,107,79,0.2); padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .cin-ar-line { display: flex; flex-direction: column; align-items: flex-end; }
+  .cin-ar-line span { font-size: 0.5rem; color: #4c7a63; }
+  .cin-ar-line strong { font-size: 0.58rem; color: #27654a; font-weight: 700; }
+  .cin-photo-sm { margin-top: auto; align-self: center; width: 44px; height: 50px; background: #c7c7c7; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+  .cin-bottom { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; border-top: 1px dashed rgba(0,0,0,0.1); font-size: 0.55rem; color: #666; }
+  .cin-bottom strong { color: #333; font-family: ui-monospace, monospace; }
+
+  /* Floating mini cards */
+  .float-card { position: absolute; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); border-radius: 9999px; box-shadow: 0 10px 30px rgba(31,38,135,0.1); font-size: 0.875rem; }
+  .mini-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .mini-dot.green { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .mini-dot.orange { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
+  .mini-domain { font-weight: 600; color: var(--color-text); }
+  .float-1 { top: 8%; left: 5%; transform: rotate(-2deg); animation: float-1 6s ease-in-out infinite; }
+  .float-2 { top: 22%; right: 0; transform: rotate(1.5deg); animation: float-2 7s ease-in-out infinite; animation-delay: -2s; }
+  .float-3 { bottom: 12%; left: 10%; transform: rotate(2deg); animation: float-3 8s ease-in-out infinite; animation-delay: -4s; }
+  @keyframes float-1 { 0%,100% { transform: translate(0,0) rotate(-2deg); } 50% { transform: translate(0,-12px) rotate(-2deg); } }
+  @keyframes float-2 { 0%,100% { transform: translate(0,0) rotate(1.5deg); } 50% { transform: translate(0,-10px) rotate(1.5deg); } }
+  @keyframes float-3 { 0%,100% { transform: translate(0,0) rotate(2deg); } 50% { transform: translate(0,-14px) rotate(2deg); } }
+
+  /* Extension pills */
+  .ext-pill { position: absolute; padding: 0.45rem 0.9rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(81,112,255,0.2); border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; color: var(--color-primary); box-shadow: 0 6px 20px rgba(31,38,135,0.08); }
+  .ext-1 { bottom: 38%; right: 5%; animation: float-1 5.5s ease-in-out infinite; animation-delay: -1s; }
+  .ext-2 { bottom: 22%; right: 22%; animation: float-2 6s ease-in-out infinite; animation-delay: -3s; }
+  .ext-3 { top: 42%; left: -2%; animation: float-3 5s ease-in-out infinite; animation-delay: -2.5s; }
+  .ext-4 { top: 14%; right: 18%; animation: float-1 6.5s ease-in-out infinite; animation-delay: -1.5s; }
+
+  /* ==========================================
+     SECTION HEADERS
+     ========================================== */
+  .section-header { text-align: center; max-width: 640px; margin: 0 auto 3.5rem; }
+  .section-header h2 { font-size: clamp(1.85rem, 3.2vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; margin: 0 0 0.75rem; color: var(--color-text); line-height: 1.15; }
+  .section-header p { font-size: 1.0625rem; color: var(--color-text-muted); line-height: 1.7; margin: 0; }
+
+  /* ==========================================
+     STEPS (showcase-card style)
+     ========================================== */
+  .hv-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+  .hv-step { background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); padding: 1.75rem; box-shadow: 0 12px 40px rgba(31,38,135,0.08); transition: all 0.3s ease; }
+  .hv-step:hover { transform: translateY(-5px) rotate(-0.5deg); box-shadow: 0 20px 50px rgba(81,112,255,0.15); border-color: rgba(81,112,255,0.25); }
+  .step-number { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; color: var(--color-primary); margin-bottom: 0.75rem; padding: 0.3rem 0.75rem; display: inline-block; background: rgba(81,112,255,0.1); border-radius: 9999px; }
+  .hv-step h3 { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--color-text); letter-spacing: -0.01em; }
+  .hv-step p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* ==========================================
+     DOCUMENTS
+     ========================================== */
+  .hv-docs-section { background: var(--color-bg-alt); }
+
+  .hv-legend { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; }
+  .hv-legend-item { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--color-text-muted); }
+  .hv-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .hv-dot-ind { background: var(--color-primary); box-shadow: 0 0 0 3px rgba(81,112,255,0.15); }
+  .hv-dot-com { background: #8b5cf6; box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+
+  .hv-flow { display: flex; align-items: center; gap: 0.75rem; max-width: 900px; margin: 0 auto 3.5rem; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: 9999px; box-shadow: 0 12px 40px rgba(31,38,135,0.08); }
+  .hv-flow-step { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.03em; color: var(--color-text-muted); white-space: nowrap; }
+  .hv-flow-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(81,112,255,0.1); color: var(--color-primary); transition: all 0.3s ease; }
+  .hv-flow-step:hover .hv-flow-icon { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(81,112,255,0.08); }
+  .hv-flow-final { color: #059669; }
+  .hv-flow-final .hv-flow-icon { background: rgba(16,185,129,0.12); color: #10b981; }
+  .hv-flow-line { flex: 1; height: 2px; min-width: 16px; background: repeating-linear-gradient(90deg, rgba(81,112,255,0.5) 0 8px, transparent 8px 16px); animation: flowAnim 1s linear infinite; opacity: 0.5; }
+  @keyframes flowAnim { to { background-position: 16px 0; } }
+
+  .hv-bento { display: grid; grid-template-columns: repeat(12,1fr); gap: 1.5rem; }
+  .hv-doc { grid-column: span 6; display: flex; flex-direction: column; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); padding: 1.5rem; box-shadow: 0 12px 40px rgba(31,38,135,0.08); transition: all 0.35s ease; }
+  .hv-doc-hero { grid-column: span 7; }
+  .hv-doc-tall { grid-column: span 5; }
+  .hv-doc:hover { transform: translateY(-6px) rotate(-0.3deg); border-color: rgba(81,112,255,0.3); box-shadow: 0 24px 60px rgba(81,112,255,0.14); }
+
+  .hv-doc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .hv-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+  .hv-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+  .hv-tag-ind { background: rgba(81,112,255,0.1); color: var(--color-primary); }
+  .hv-tag-ind::before { background: var(--color-primary); }
+  .hv-tag-com { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+  .hv-tag-com::before { background: #8b5cf6; }
+  .hv-doc-badge { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); }
+
+  .hv-doc-stage { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; border-radius: 16px; background: radial-gradient(circle at 50% 0%, rgba(81,112,255,0.05), transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(100,116,139,0.04) 22px, rgba(100,116,139,0.04) 23px), #f1f5f9; overflow: hidden; min-height: 180px; }
+
+  .cin-inline { max-width: 400px; transform: rotate(-1.5deg); transition: transform 0.4s ease; }
+  .hv-doc:hover .cin-inline { transform: rotate(0deg) scale(1.02); }
+
+  .hv-scanline { position: absolute; left: 0; right: 0; top: -40%; height: 40%; opacity: 0; pointer-events: none; z-index: 5; background: linear-gradient(to bottom, transparent, rgba(81,112,255,0.12) 42%, rgba(81,112,255,0.55) 50%, rgba(81,112,255,0.12) 58%, transparent); box-shadow: 0 0 18px rgba(81,112,255,0.35); }
+  .hv-doc:hover .hv-scanline { animation: hvScan 1.8s ease-in-out infinite; }
+  @keyframes hvScan { 0% { top: -40%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
+  .hv-status { display: grid; place-items: center; height: 28px; margin: 1.1rem 0 0.9rem; }
+  .hv-status span { grid-area: 1/1; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 9999px; transition: opacity 0.3s; }
+  .st-idle { color: var(--color-text-muted); background: rgba(100,116,139,0.08); opacity: 1; }
+  .st-verify { color: var(--color-primary); background: rgba(81,112,255,0.1); opacity: 0; }
+  .st-done { color: #059669; background: rgba(16,185,129,0.12); opacity: 0; }
+  .hv-doc:hover .st-idle { opacity: 0; }
+  .hv-doc:hover .st-verify { animation: ph1 1.8s ease forwards; }
+  .hv-doc:hover .st-done { animation: ph2 1.8s ease forwards; }
+  @keyframes ph1 { 0% {opacity:0;} 12% {opacity:1;} 70% {opacity:1;} 82% {opacity:0;} 100% {opacity:0;} }
+  @keyframes ph2 { 0%,80% {opacity:0;} 100% {opacity:1;} }
+
+  .hv-doc-info h3 { font-size: 1.0625rem; font-weight: 700; margin: 0 0 0.4rem; color: var(--color-text); letter-spacing: -0.01em; }
+  .hv-doc-info p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* Passport */
+  .pp-card { max-width: 220px; aspect-ratio: 0.72/1; background: linear-gradient(160deg, #7f1d1d, #450a0a); border-radius: 14px; padding: 18px 16px; color: #fcd34d; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; box-shadow: 0 18px 40px rgba(69,10,10,0.4); transition: transform 0.4s ease; }
+  .hv-doc:hover .pp-card { transform: scale(1.04); }
+  .pp-frame { position: absolute; inset: 8px; border: 1px solid rgba(252,211,77,0.35); border-radius: 8px; }
+  .pp-top { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.14em; margin-top: 6px; }
+  .pp-emblem { margin: 16px 0 12px; color: #fbbf24; }
+  .pp-word { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.22em; color: #fde68a; }
+  .pp-sub { font-size: 0.6rem; letter-spacing: 0.18em; opacity: 0.85; }
+  .pp-data { margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 3px; text-align: left; padding-top: 12px; }
+  .pp-row { display: flex; justify-content: space-between; }
+  .pp-row span { font-size: 0.5rem; opacity: 0.75; }
+  .pp-row strong { font-size: 0.58rem; font-family: ui-monospace, monospace; color: #fde68a; }
+  .pp-mrz { margin-top: 8px; font-family: ui-monospace, monospace; font-size: 0.48rem; color: rgba(252,211,77,0.7); white-space: nowrap; overflow: hidden; width: 100%; }
+
+  /* RC */
+  .rc-card { max-width: 330px; width: 100%; background: #fffdf7; border-radius: 10px; padding: 20px 18px; color: #1e293b; position: relative; box-shadow: 0 18px 40px rgba(15,23,42,0.16); transition: transform 0.4s ease; }
+  .hv-doc:hover .rc-card { transform: scale(1.02) rotate(-0.5deg); }
+  .rc-frame { position: absolute; inset: 7px; border: 2px solid rgba(30,58,138,0.3); border-radius: 6px; }
+  .rc-frame::after { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(81,112,255,0.25); border-radius: 4px; }
+  .rc-header { position: relative; text-align: center; padding-bottom: 12px; border-bottom: 1px dashed rgba(81,112,255,0.3); }
+  .rc-seal { color: var(--color-primary); margin-bottom: 6px; }
+  .rc-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; color: #1e3a8a; letter-spacing: 0.04em; }
+  .rc-sub { font-size: 0.58rem; letter-spacing: 0.16em; color: var(--color-primary); text-transform: uppercase; margin-top: 3px; }
+  .rc-stamp { position: absolute; top: 6px; right: -6px; transform: rotate(12deg); font-size: 0.55rem; font-weight: 800; color: #16a34a; border: 2px solid #16a34a; border-radius: 6px; padding: 3px 7px; opacity: 0.85; transition: transform 0.3s ease; }
+  .hv-doc:hover .rc-stamp { transform: rotate(6deg) scale(1.08); }
+  .rc-rows { position: relative; margin-top: 12px; }
+  .rc-row { display: flex; justify-content: space-between; padding: 6px 2px; border-bottom: 1px solid rgba(81,112,255,0.08); }
+  .rc-row:last-child { border-bottom: none; }
+  .rc-row span { font-size: 0.66rem; color: var(--color-primary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+  .rc-row strong { font-size: 0.78rem; font-family: ui-monospace, monospace; }
+  .rc-active { color: #16a34a !important; }
+
+  /* ICE */
+  .ice-card { max-width: 350px; width: 100%; background: linear-gradient(160deg, #0f172a, #1e293b); border-radius: 14px; padding: 16px; color: #e2e8f0; box-shadow: 0 18px 40px rgba(15,23,42,0.4); transition: transform 0.4s ease; }
+  .hv-doc:hover .ice-card { transform: scale(1.02) rotate(0.5deg); }
+  .ice-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ice-icon { color: var(--color-primary-light); display: flex; }
+  .ice-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; flex: 1; color: #f1f5f9; }
+  .ice-live { font-size: 0.58rem; font-weight: 700; color: #34d399; }
+  .ice-barcode { color: rgba(226,232,240,0.6); margin-bottom: 12px; padding: 6px 8px; background: rgba(255,255,255,0.05); border-radius: 6px; }
+  .ice-main { display: flex; gap: 12px; }
+  .ice-qr { flex-shrink: 0; width: 60px; height: 60px; padding: 4px; background: #f8fafc; border-radius: 8px; color: #0f172a; display: flex; align-items: center; justify-content: center; }
+  .ice-fields { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; }
+  .ice-field { display: flex; flex-direction: column; }
+  .ice-field span { font-size: 0.5rem; text-transform: uppercase; color: #94a3b8; font-weight: 600; letter-spacing: 0.06em; }
+  .ice-field strong { font-size: 0.7rem; font-family: ui-monospace, monospace; color: #f8fafc; margin-top: 2px; }
+  .ice-footer { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .ice-footer span { font-size: 0.6rem; text-transform: uppercase; color: #94a3b8; }
+  .ice-verified { font-size: 0.76rem; font-weight: 800; color: #34d399; }
+
+  .hv-disclaimer { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 2.5rem auto 0; max-width: 640px; text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); }
+  .hv-disclaimer svg { color: var(--color-primary); flex-shrink: 0; }
+
+  /* ==========================================
+     NOTICE
+     ========================================== */
+  .hv-notice { display: flex; gap: 1.25rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(251,191,36,0.25); border-radius: var(--border-radius); padding: 1.75rem 2rem; align-items: flex-start; box-shadow: 0 12px 40px rgba(245,158,11,0.08); }
+  .hv-notice-icon { flex-shrink: 0; color: #d97706; margin-top: 2px; }
+  .hv-notice-content h3 { font-size: 1.1rem; font-weight: 700; color: #92400e; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .hv-notice-content p { font-size: 0.9375rem; color: #a16207; line-height: 1.65; margin: 0; }
+  .hv-notice-content strong { color: #78350f; }
+
+  /* ==========================================
+     BENEFITS (showcase-card style)
+     ========================================== */
+  .hv-benefits-section { background: var(--color-bg-alt); }
+  .hv-benefits { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+  .hv-benefit { text-align: center; padding: 2rem 1.5rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); box-shadow: 0 12px 40px rgba(31,38,135,0.08); transition: all 0.3s ease; }
+  .hv-benefit:hover { transform: translateY(-5px); border-color: rgba(81,112,255,0.25); box-shadow: 0 20px 50px rgba(81,112,255,0.15); }
+  .hv-benefit-icon { width: 52px; height: 52px; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; background: rgba(81,112,255,0.1); color: var(--color-primary); border-radius: 14px; transition: all 0.3s ease; }
+  .hv-benefit:hover .hv-benefit-icon { background: linear-gradient(135deg, var(--color-primary), #738aff); color: white; transform: scale(1.08) rotate(-4deg); }
+  .hv-benefit h3 { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .hv-benefit p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* ==========================================
+     FAQ
+     ========================================== */
+  .hv-faq { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+  .hv-faq-item { background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(31,38,135,0.04); transition: all 0.3s ease; }
+  .hv-faq-item:hover { border-color: rgba(81,112,255,0.2); }
+  .hv-faq-item.active { border-color: var(--color-primary); box-shadow: 0 8px 24px rgba(81,112,255,0.1); }
+  .hv-faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; font-size: 1rem; font-weight: 600; color: var(--color-text); transition: color 0.2s ease; }
+  .hv-faq-q:hover { color: var(--color-primary); }
+  .hv-faq-icon { flex-shrink: 0; color: var(--color-text-muted); transition: transform 0.3s ease; }
+  .hv-faq-item.active .hv-faq-icon { transform: rotate(180deg); color: var(--color-primary); }
+  .hv-faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .hv-faq-item.active .hv-faq-a { max-height: 280px; }
+  .hv-faq-a p { padding: 0 1.5rem 1.25rem; margin: 0; color: var(--color-text-muted); font-size: 0.9375rem; line-height: 1.7; }
+
+  /* ==========================================
+     CTA (showcase-card style)
+     ========================================== */
+  .hv-cta { padding: 7rem 0; position: relative; overflow: hidden; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .hv-cta-card { position: relative; z-index: 1; text-align: center; max-width: 700px; margin: 0 auto; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); padding: 3.5rem 2.5rem; box-shadow: 0 20px 50px rgba(31,38,135,0.12); }
+  .hv-cta-card h2 { font-size: clamp(1.85rem, 3.2vw, 2.5rem); font-weight: 700; margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .hv-cta-card p { color: var(--color-text-muted); margin: 0 0 2.25rem; font-size: 1.0625rem; }
+  .hv-cta-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* ==========================================
+     FADE IN
+     ========================================== */
+  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards; animation-delay: var(--delay, 0s); }
+  @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+  /* ==========================================
+     RESPONSIVE
+     ========================================== */
+  @media (max-width: 1024px) {
+    .hv-steps { grid-template-columns: 1fr 1fr; }
+    .hv-benefits { grid-template-columns: 1fr 1fr; }
+    .hv-doc-hero, .hv-doc-tall, .hv-doc { grid-column: span 6; }
+    .hv-flow { flex-wrap: wrap; justify-content: center; border-radius: 20px; }
+    .hv-flow-line { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .hv-hero, .hv-section { padding: 3rem 0 4rem; }
+    .hero-grid { gap: 3rem; }
+    .hero-content { text-align: center; }
+    .hero-subtitle { margin-left: auto; margin-right: auto; }
+    .secondary-links, .trust-row { justify-content: center; }
+    .trust-dot { display: none; }
+    .hv-steps, .hv-benefits, .hv-bento { grid-template-columns: 1fr; }
+    .hv-doc-hero, .hv-doc-tall, .hv-doc { grid-column: span 1; }
+    .hv-notice { flex-direction: column; gap: 1rem; padding: 1.5rem; }
+    .hv-flow-step span { display: none; }
+    .hv-flow { gap: 0.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 2rem; }
+    .trust-row { gap: 0.75rem 1rem; }
+    .trust-item { font-size: 0.8125rem; }
+    .cin-fields { flex-direction: column; }
+    .cin-green { width: 100%; border-left: none; border-top: 1px solid rgba(14,107,79,0.2); }
+    .cin-body { flex-direction: column; }
+    .cin-photo { width: 100%; height: auto; aspect-ratio: 4/3; }
+  }
+
+  /* ==========================================
+     REDUCED MOTION
+     ========================================== */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in, .showcase-card, .float-card, .ext-pill, .badge-dot, .cin-front, .hv-flow-line { animation: none; opacity: 1; transform: none; }
+    .hv-scanline { display: none; }
+    .hv-doc:hover .cin-inline, .hv-doc:hover .pp-card, .hv-doc:hover .rc-card, .hv-doc:hover .ice-card { transform: none; }
+    .hv-faq-a { transition: none; }
+    .hv-step, .hv-doc, .hv-benefit { transition: none; }
+    .hv-step:hover, .hv-doc:hover, .hv-benefit:hover { transform: none; }
+  }
+</style>
+
+<script>
+  // FAQ Accordion
+  document.querySelectorAll('.hv-faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const panel = item.querySelector('.hv-faq-a');
+      const open = item.classList.contains('active');
+
+      document.querySelectorAll('.hv-faq-item').forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.hv-faq-q').setAttribute('aria-expanded', 'false');
+        i.querySelector('.hv-faq-a').hidden = true;
+      });
+
+      if (!open) {
+        item.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+        panel.hidden = false;
+      }
+    });
+  });
+
+  // Scroll-triggered fade-in for sections below the hero
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          entry.target.classList.add('fade-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.hv-section .fade-in, .hv-cta .fade-in').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+  });
+</script>

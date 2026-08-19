@@ -1,0 +1,889 @@
+---
+// src/pages/identity-verification.astro
+// ==========================================
+// EXISTING LOGIC PRESERVED
+// ==========================================
+import Layout from '../layouts/Layout.astro';
+
+const steps = [
+  { number: '01', title: 'Choose Domain', desc: 'Select the .ma domain you want to register.' },
+  { number: '02', title: 'Prepare Documents', desc: 'Gather your valid ID or company registration papers.' },
+  { number: '03', title: 'ANRT Review', desc: 'Your information is securely reviewed by the ANRT.' },
+  { number: '04', title: 'Activation', desc: 'Once approved, your domain is activated instantly.' }
+];
+
+const documents = {
+  individuals: [
+    { title: 'Moroccan National ID', desc: 'Clear, valid copy of your CIN (Recto/Verso).', icon: 'id' },
+    { title: 'Passport', desc: 'Valid passport for non-resident Moroccan citizens.', icon: 'passport' }
+  ],
+  companies: [
+    { title: 'Registre de Commerce', desc: 'Official company registration certificate (RC).', icon: 'building' },
+    { title: 'IF & ICE', desc: 'Tax identification and common company identifier.', icon: 'file' }
+  ]
+};
+
+// NEW: explanations + profile tags for the visual document section
+const docExplanations = {
+  cin: 'Used to verify the identity of an individual domain holder.',
+  passport: 'May be used as an alternative identity document where applicable.',
+  rc: 'Used to validate company registration information.',
+  ice: 'Used to identify the registered business entity.'
+};
+
+const benefits = [
+  { title: 'Security', desc: 'Protect domain ownership and prevent unauthorized takeovers.', icon: 'shield' },
+  { title: 'Trust', desc: 'Maintain a reliable and credible .ma domain ecosystem.', icon: 'badge' },
+  { title: 'Compliance', desc: 'Follow Moroccan ANRT domain registration regulations.', icon: 'scale' },
+  { title: 'Protection', desc: 'Reduce fraudulent, abusive, or cybersquatting registrations.', icon: 'lock' }
+];
+
+const faqs = [
+  { q: 'Why do I need to verify my identity?', a: 'The ANRT requires identity verification for all .ma domain registrations to ensure accountability, prevent fraud, and maintain the integrity of the Moroccan digital space.' },
+  { q: 'What documents are accepted?', a: 'For individuals: A valid Moroccan National ID (CIN) or Passport. For companies: Recent Registre de Commerce (RC), Identifiant Fiscal (IF), and ICE documents.' },
+  { q: 'How long does verification take?', a: 'Most verifications are processed within 24 to 48 business hours. Complex corporate structures may take up to 3 business days.' },
+  { q: 'Can I register a .ma domain as a company?', a: 'Yes. You will need to provide the company\'s official registration documents and the identity of the legal representative.' }
+];
+
+const icons = {
+  shield: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  badge: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>`,
+  scale: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>`,
+  lock: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  alert: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  chevron: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>`
+};
+---
+
+<Layout title="Identity Verification | .ma Domain Registration">
+  <main class="iv-page">
+
+    <!-- ========================================== -->
+    <!-- HERO SECTION                               -->
+    <!-- ========================================== -->
+    <section class="iv-hero section" aria-labelledby="iv-hero-title">
+      <div class="hero-decor" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="badge fade-in" style="--delay: 0.1s">
+              <span class="badge-dot"></span>
+              <span>ANRT Compliant Process</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+
+            <h1 class="hero-title fade-in" id="iv-hero-title" style="--delay: 0.2s">
+              Verify Your Identity for Your
+              <span class="gradient-text">.ma Domain</span>
+            </h1>
+
+            <p class="hero-subtitle fade-in" style="--delay: 0.3s">
+              To ensure security and compliance with Moroccan regulations, all .ma domain registrations require a brief, secure identity verification process.
+            </p>
+
+            <div class="secondary-links fade-in" style="--delay: 0.4s; margin-bottom: 1.5rem;">
+              <a href="/register" class="btn-primary">
+                <span>Start Verification</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="/search" class="ghost-link">
+                <span>Check Domain Availability</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+              </a>
+            </div>
+
+            <div class="trust-row fade-in" style="--delay: 0.5s">
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Secure & Encrypted</span>
+              </div>
+              <span class="trust-dot" aria-hidden="true"></span>
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <span>Fast Processing</span>
+              </div>
+              <span class="trust-dot" aria-hidden="true"></span>
+              <div class="trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                <span>ANRT Approved</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual fade-in" style="--delay: 0.3s" aria-hidden="true">
+            <div class="visual-stack">
+              <div class="showcase-card">
+                <div class="showcase-header">
+                  <span class="showcase-badge">Verified</span>
+                  <span class="showcase-status">Approved</span>
+                </div>
+                <div class="showcase-domain" style="font-size: 1.5rem; margin-bottom: 1rem;">Identity Check</div>
+                <div class="showcase-desc" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #10b981;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span style="font-size: 0.875rem; color: var(--color-text);">Document validated</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 32px; height: 32px; background: rgba(81, 112, 255, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--color-primary);">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <span style="font-size: 0.875rem; color: var(--color-text);">ANRT compliance met</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="float-card float-1">
+                <span class="mini-dot green"></span>
+                <span class="mini-domain">CIN Verified</span>
+              </div>
+              <div class="float-card float-2">
+                <span class="mini-dot green"></span>
+                <span class="mini-domain">RC Approved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VERIFICATION PROCESS (4 Steps)             -->
+    <!-- ========================================== -->
+    <section class="iv-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>How Verification Works</h2>
+          <p>A simple, secure, and transparent process to get your domain online.</p>
+        </div>
+
+        <div class="iv-steps-grid">
+          {steps.map((step, index) => (
+            <div class="iv-step-card fade-in" style={`--delay: ${0.2 + index * 0.1}s`}>
+              <div class="step-number">{step.number}</div>
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- NEW: VISUAL DOCUMENT VERIFICATION SECTION                    -->
+    <!-- ============================================================ -->
+    <section class="iv-section dv-section iv-bg-alt">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Documents Required for .ma Verification</h2>
+          <p>Depending on your profile, ANRT may require identity or company documentation to validate your .ma domain registration.</p>
+          <div class="dv-legend" aria-hidden="true">
+            <span class="dv-legend-item"><span class="dv-dot dv-dot-ind"></span> Individuals</span>
+            <span class="dv-legend-item"><span class="dv-dot dv-dot-com"></span> Companies</span>
+          </div>
+        </div>
+
+        <!-- Verification pipeline -->
+        <div class="dv-flow fade-in" style="--delay: 0.15s" aria-label="Verification flow: document submitted, identity check, ANRT verification, verified">
+          <div class="dv-flow-step">
+            <div class="dv-flow-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <span>DOCUMENT SUBMITTED</span>
+          </div>
+          <div class="dv-flow-line" aria-hidden="true"></div>
+          <div class="dv-flow-step">
+            <div class="dv-flow-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            <span>IDENTITY CHECK</span>
+          </div>
+          <div class="dv-flow-line" aria-hidden="true"></div>
+          <div class="dv-flow-step">
+            <div class="dv-flow-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span>ANRT VERIFICATION</span>
+          </div>
+          <div class="dv-flow-line" aria-hidden="true"></div>
+          <div class="dv-flow-step dv-flow-final">
+            <div class="dv-flow-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span>VERIFIED ✓</span>
+          </div>
+        </div>
+
+        <!-- Bento document grid -->
+        <div class="dv-bento">
+
+          <!-- ===== CIN / ID CARD (hero) ===== -->
+          <article class="dv-card dv-card-hero fade-in" style="--delay: 0.2s">
+            <div class="dv-card-top">
+              <span class="dv-tag dv-tag-ind">For individuals</span>
+              <span class="dv-badge">Primary Document</span>
+            </div>
+
+            <div class="dv-stage">
+              <div class="dv-scanline" aria-hidden="true"></div>
+              <div class="dv-mockup dv-cin" role="img" aria-label="Sample preview of a Moroccan National ID card">
+                <div class="cin-pattern" aria-hidden="true"></div>
+                <div class="cin-holo" aria-hidden="true"></div>
+                <div class="cin-header">
+                  <div class="cin-emblem" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.5 5.5L20 8.5l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-1z"/></svg>
+                  </div>
+                  <div class="cin-country">
+                    <span>ROYAUME DU MAROC</span>
+                    <span>KINGDOM OF MOROCCO</span>
+                  </div>
+                  <div class="cin-vcheck" aria-hidden="true">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                </div>
+                <div class="cin-title">NATIONAL IDENTITY CARD</div>
+                <div class="cin-body">
+                  <div class="cin-photo" aria-hidden="true">
+                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div class="cin-fields">
+                    <div class="cin-field"><span>ID NUMBER</span><strong>XXXX XXXX</strong></div>
+                    <div class="cin-field"><span>NAME</span><strong>SAMPLE USER</strong></div>
+                    <div class="cin-field"><span>DATE OF BIRTH</span><strong>XX/XX/XXXX</strong></div>
+                    <div class="cin-field"><span>NATIONALITY</span><strong>MOROCCAN</strong></div>
+                  </div>
+                </div>
+                <div class="cin-mrz" aria-hidden="true">XXXX&lt;&lt;SAMPLE&lt;USER&lt;&lt;&lt;&lt;&lt;&lt;XXXX&lt;&lt;&lt;&lt;</div>
+              </div>
+            </div>
+
+            <div class="dv-status" aria-hidden="true">
+              <span class="scan-idle">Preview Mode</span>
+              <span class="scan-verifying">VERIFYING DOCUMENT…</span>
+              <span class="scan-done">DOCUMENT FORMAT ✓</span>
+            </div>
+
+            <div class="dv-info">
+              <h3>{documents.individuals[0].title} (CIN)</h3>
+              <p>{docExplanations.cin}</p>
+            </div>
+          </article>
+
+          <!-- ===== PASSPORT ===== -->
+          <article class="dv-card dv-card-tall fade-in" style="--delay: 0.3s">
+            <div class="dv-card-top">
+              <span class="dv-tag dv-tag-ind">For individuals</span>
+              <span class="dv-badge">Alternative</span>
+            </div>
+
+            <div class="dv-stage">
+              <div class="dv-scanline" aria-hidden="true"></div>
+              <div class="dv-mockup dv-passport" role="img" aria-label="Sample preview of a Moroccan passport">
+                <div class="pp-frame" aria-hidden="true"></div>
+                <div class="pp-top">ROYAUME DU MAROC</div>
+                <div class="pp-emblem" aria-hidden="true">
+                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 4l1.8 4 4.2.4-3.2 2.9 1 4.2L12 17l-3.8 2.5 1-4.2-3.2-2.9 4.2-.4z"/></svg>
+                </div>
+                <div class="pp-word">PASSPORT</div>
+                <div class="pp-sub">PASSEPORT</div>
+                <div class="pp-bio" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h.01M12 8h5M7 12h10M7 16h6"/></svg>
+                </div>
+                <div class="pp-data">
+                  <div class="pp-row"><span>No.</span><strong>XXXXXXX</strong></div>
+                  <div class="pp-row"><span>NAME</span><strong>SAMPLE USER</strong></div>
+                  <div class="pp-row"><span>DOB</span><strong>XX/XX/XXXX</strong></div>
+                </div>
+                <div class="pp-mrz" aria-hidden="true">P&lt;MARSAMPLE&lt;&lt;USER&lt;&lt;&lt;&lt;&lt;&lt;XXXX</div>
+              </div>
+            </div>
+
+            <div class="dv-status" aria-hidden="true">
+              <span class="scan-idle">Preview Mode</span>
+              <span class="scan-verifying">VERIFYING DOCUMENT…</span>
+              <span class="scan-done">DOCUMENT FORMAT ✓</span>
+            </div>
+
+            <div class="dv-info">
+              <h3>{documents.individuals[1].title}</h3>
+              <p>{docExplanations.passport}</p>
+            </div>
+          </article>
+
+          <!-- ===== REGISTRE DE COMMERCE ===== -->
+          <article class="dv-card fade-in" style="--delay: 0.25s">
+            <div class="dv-card-top">
+              <span class="dv-tag dv-tag-com">For companies</span>
+              <span class="dv-badge">Required</span>
+            </div>
+
+            <div class="dv-stage">
+              <div class="dv-scanline" aria-hidden="true"></div>
+              <div class="dv-mockup dv-rc" role="img" aria-label="Sample preview of a Registre de Commerce certificate">
+                <div class="rc-frame" aria-hidden="true"></div>
+                <div class="rc-header">
+                  <div class="rc-seal" aria-hidden="true">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><path d="M12 3v18M3 12h18"/></svg>
+                  </div>
+                  <div class="rc-title">REGISTRE DE COMMERCE</div>
+                  <div class="rc-sub">TRIBUNAL DE COMMERCE</div>
+                  <div class="rc-stamp" aria-hidden="true">VERIFIED ✓</div>
+                </div>
+                <div class="rc-rows">
+                  <div class="rc-row"><span>Company</span><strong>SAMPLE COMPANY SARL</strong></div>
+                  <div class="rc-row"><span>RC</span><strong>XXXXXXXX</strong></div>
+                  <div class="rc-row"><span>ICE</span><strong>XXXXXXXXXXXXXXXX</strong></div>
+                  <div class="rc-row"><span>Legal Form</span><strong>SARL</strong></div>
+                  <div class="rc-row"><span>Status</span><strong class="rc-active">ACTIVE</strong></div>
+                  <div class="rc-row"><span>Registration</span><strong>XX/XX/XXXX</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dv-status" aria-hidden="true">
+              <span class="scan-idle">Preview Mode</span>
+              <span class="scan-verifying">VERIFYING DOCUMENT…</span>
+              <span class="scan-done">DOCUMENT FORMAT ✓</span>
+            </div>
+
+            <div class="dv-info">
+              <h3>{documents.companies[0].title}</h3>
+              <p>{docExplanations.rc}</p>
+            </div>
+          </article>
+
+          <!-- ===== ICE ===== -->
+          <article class="dv-card fade-in" style="--delay: 0.35s">
+            <div class="dv-card-top">
+              <span class="dv-tag dv-tag-com">For companies</span>
+              <span class="dv-badge">Required</span>
+            </div>
+
+            <div class="dv-stage">
+              <div class="dv-scanline" aria-hidden="true"></div>
+              <div class="dv-mockup dv-ice" role="img" aria-label="Sample preview of an ICE business identification document">
+                <div class="ice-header">
+                  <span class="ice-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4M7 12h10M7 16h7"/></svg>
+                  </span>
+                  <span class="ice-title">BUSINESS IDENTIFICATION</span>
+                  <span class="ice-live">● ACTIVE</span>
+                </div>
+                <div class="ice-barcode" aria-hidden="true">
+                  <svg width="100%" height="26" viewBox="0 0 200 26" preserveAspectRatio="none">
+                    <g fill="currentColor"><rect x="0" width="2" height="26"/><rect x="5" width="1" height="26"/><rect x="9" width="3" height="26"/><rect x="15" width="1" height="26"/><rect x="19" width="2" height="26"/><rect x="24" width="1" height="26"/><rect x="28" width="3" height="26"/><rect x="34" width="2" height="26"/><rect x="39" width="1" height="26"/><rect x="43" width="2" height="26"/><rect x="48" width="3" height="26"/><rect x="54" width="1" height="26"/><rect x="58" width="2" height="26"/><rect x="63" width="1" height="26"/><rect x="67" width="3" height="26"/><rect x="73" width="2" height="26"/><rect x="78" width="1" height="26"/><rect x="82" width="2" height="26"/><rect x="87" width="3" height="26"/><rect x="93" width="1" height="26"/><rect x="97" width="2" height="26"/><rect x="102" width="1" height="26"/><rect x="106" width="3" height="26"/><rect x="112" width="2" height="26"/><rect x="117" width="1" height="26"/><rect x="121" width="2" height="26"/><rect x="126" width="3" height="26"/><rect x="132" width="1" height="26"/><rect x="136" width="2" height="26"/><rect x="141" width="1" height="26"/><rect x="145" width="3" height="26"/><rect x="151" width="2" height="26"/><rect x="156" width="1" height="26"/><rect x="160" width="2" height="26"/><rect x="165" width="3" height="26"/><rect x="171" width="1" height="26"/><rect x="175" width="2" height="26"/><rect x="180" width="1" height="26"/><rect x="184" width="3" height="26"/><rect x="190" width="2" height="26"/><rect x="195" width="1" height="26"/></g>
+                  </svg>
+                </div>
+                <div class="ice-main">
+                  <div class="ice-qr" aria-hidden="true">
+                    <svg width="56" height="56" viewBox="0 0 11 11" shape-rendering="crispEdges">
+                      <g fill="currentColor"><rect x="0" y="0" width="3" height="3"/><rect x="8" y="0" width="3" height="3"/><rect x="0" y="8" width="3" height="3"/><rect x="1" y="1" width="1" height="1" fill="#0f172a"/><rect x="9" y="1" width="1" height="1" fill="#0f172a"/><rect x="1" y="9" width="1" height="1" fill="#0f172a"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/></g>
+                    </svg>
+                  </div>
+                  <div class="ice-fields">
+                    <div class="ice-field"><span>Company Name</span><strong>SAMPLE COMPANY</strong></div>
+                    <div class="ice-field"><span>ICE</span><strong>XXXXXXXXXXXXXXXX</strong></div>
+                    <div class="ice-field"><span>RC</span><strong>XXXXXXXX</strong></div>
+                    <div class="ice-field"><span>Legal Form</span><strong>SARL</strong></div>
+                  </div>
+                </div>
+                <div class="ice-footer">
+                  <span>Status</span>
+                  <strong class="ice-verified">VERIFIED ✓</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="dv-status" aria-hidden="true">
+              <span class="scan-idle">Preview Mode</span>
+              <span class="scan-verifying">VERIFYING DOCUMENT…</span>
+              <span class="scan-done">DOCUMENT FORMAT ✓</span>
+            </div>
+
+            <div class="dv-info">
+              <h3>ICE</h3>
+              <p>{docExplanations.ice}</p>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="dv-disclaimer fade-in" style="--delay: 0.2s">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Document visuals above are illustrative mockups with sample data only. They do not represent real documents or personal information.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- IMPORTANT ANRT NOTICE                      -->
+    <!-- ========================================== -->
+    <section class="iv-section">
+      <div class="container">
+        <div class="iv-notice fade-in" style="--delay: 0.1s">
+          <div class="iv-notice-icon" set:html={icons.alert}></div>
+          <div class="iv-notice-content">
+            <h3>Important ANRT Notice</h3>
+            <p>
+              <strong>.ma domains are subject to strict ANRT identity verification requirements.</strong>
+              Please ensure all uploaded documents are clear, valid, and match the registrant information exactly.
+              Incomplete or mismatched information will result in verification delays.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- WHY VERIFICATION IS REQUIRED               -->
+    <!-- ========================================== -->
+    <section class="iv-section iv-bg-alt">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Why Verification Is Required</h2>
+          <p>Protecting you and the Moroccan digital ecosystem.</p>
+        </div>
+
+        <div class="iv-benefits-grid">
+          {benefits.map((benefit, index) => (
+            <div class="iv-benefit-card fade-in" style={`--delay: ${0.2 + index * 0.1}s`}>
+              <div class="iv-benefit-icon" set:html={icons[benefit.icon]}></div>
+              <h3>{benefit.title}</h3>
+              <p>{benefit.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- FAQ SECTION                                -->
+    <!-- ========================================== -->
+    <section class="iv-section">
+      <div class="container">
+        <div class="section-header fade-in" style="--delay: 0.1s">
+          <h2>Frequently Asked Questions</h2>
+          <p>Everything you need to know about the .ma verification process.</p>
+        </div>
+
+        <div class="iv-faq-list">
+          {faqs.map((faq, index) => (
+            <div class="iv-faq-item fade-in" style={`--delay: ${0.2 + index * 0.05}s`}>
+              <button class="iv-faq-question" aria-expanded="false" aria-controls={`faq-answer-${index}`} id={`faq-q-${index}`}>
+                <span>{faq.q}</span>
+                <span class="iv-faq-icon" set:html={icons.chevron}></span>
+              </button>
+              <div id={`faq-answer-${index}`} class="iv-faq-answer" role="region" aria-labelledby={`faq-q-${index}`} hidden>
+                <p>{faq.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- FINAL CTA                                  -->
+    <!-- ========================================== -->
+    <section class="iv-cta-section">
+      <div class="hero-decor" aria-hidden="true">
+        <div class="orb orb-1" style="background: radial-gradient(circle, hsla(229, 100%, 75%, 0.2) 0%, transparent 70%);"></div>
+      </div>
+      <div class="container">
+        <div class="iv-cta-card fade-in" style="--delay: 0.1s">
+          <h2>Ready to register your .ma domain?</h2>
+          <p>Complete your verification and get your Moroccan domain online today.</p>
+          <div class="secondary-links" style="justify-content: center; margin-bottom: 0;">
+            <a href="/register" class="btn-primary btn-large">
+              <span>Register a .ma Domain</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="/search" class="ghost-link" style="color: rgba(255,255,255,0.8);">
+              <span>Check Domain Availability</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  /* ==========================================
+     BASE DESIGN SYSTEM
+     ========================================== */
+  .iv-page {
+    --color-primary: #5170ff;
+    --color-primary-light: #738aff;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+    --color-bg: #ffffff;
+    --color-bg-alt: #f8fafc;
+    --border-radius: 24px;
+
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow-x: hidden;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+  .section { padding: 4rem 0 6rem; position: relative; }
+  .iv-bg-alt { background-color: var(--color-bg-alt); }
+
+  /* ==========================================
+     HERO (unchanged)
+     ========================================== */
+  .iv-hero { padding: 4rem 0 6rem; overflow: hidden; }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; }
+  @media (min-width: 1024px) {
+    .iv-hero { padding: 6rem 0 7rem; }
+    .hero-grid { grid-template-columns: 1.15fr 0.85fr; gap: 5rem; }
+  }
+  .hero-decor { position: absolute; inset: 0; pointer-events: none; z-index: -1; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; }
+  .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, hsla(229,100%,75%,0.4) 0%, transparent 70%); top: -150px; left: -100px; }
+  .orb-2 { width: 450px; height: 450px; background: radial-gradient(circle, hsla(229,100%,85%,0.5) 0%, transparent 70%); bottom: -150px; right: -100px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(81,112,255,0.15); border-radius: 9999px; font-size: 0.8125rem; font-weight: 500; color: var(--color-primary); margin-bottom: 1.75rem; }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 0 4px rgba(81,112,255,0.15); animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px rgba(81,112,255,0.15); } 50% { box-shadow: 0 0 0 8px rgba(81,112,255,0); } }
+
+  .hero-title { font-size: clamp(2.25rem, 5.5vw, 3.75rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; color: var(--color-text); letter-spacing: -0.03em; }
+  .gradient-text { background: linear-gradient(135deg, var(--color-primary) 0%, #738aff 50%, #9fb0ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; position: relative; display: inline-block; }
+  .gradient-text::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(81,112,255,0.12), rgba(115,138,255,0.12)); z-index: -1; border-radius: 12px; filter: blur(16px); }
+  .hero-subtitle { font-size: 1.125rem; line-height: 1.7; color: var(--color-text-muted); margin-bottom: 2.5rem; max-width: 540px; font-weight: 400; }
+
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.75rem; background: linear-gradient(135deg, var(--color-primary) 0%, #738aff 100%); color: white; border: none; border-radius: 9999px; font-family: inherit; font-size: 0.9375rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 4px 14px rgba(81,112,255,0.39); white-space: nowrap; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(81,112,255,0.45); }
+  .btn-primary.btn-large { padding: 1rem 2rem; font-size: 1rem; }
+
+  .secondary-links { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+  .ghost-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted); transition: color 0.2s ease; text-decoration: none; padding: 0.25rem 0; }
+  .ghost-link:hover { color: var(--color-primary); }
+
+  .trust-row { display: flex; align-items: center; gap: 1.125rem; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.875rem; color: var(--color-text-muted); font-weight: 500; }
+  .trust-item svg { color: var(--color-primary); flex-shrink: 0; }
+  .trust-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(2,37,69,0.2); }
+
+  .hero-visual { position: relative; min-height: 400px; display: none; }
+  @media (min-width: 1024px) { .hero-visual { display: block; } }
+  .visual-stack { position: relative; width: 100%; height: 400px; }
+  .showcase-card { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-1.5deg); width: 320px; background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); padding: 1.75rem; box-shadow: 0 20px 50px rgba(31,38,135,0.12); animation: float-main 7s ease-in-out infinite; }
+  @keyframes float-main { 0%,100% { transform: translate(-50%,-50%) rotate(-1.5deg); } 50% { transform: translate(-50%, calc(-50% - 10px)) rotate(-1.5deg); } }
+  .showcase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .showcase-badge { padding: 0.3rem 0.75rem; background: linear-gradient(135deg, var(--color-primary), #738aff); color: white; font-size: 0.6875rem; font-weight: 600; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .showcase-status { font-size: 0.875rem; font-weight: 700; color: #10b981; display: flex; align-items: center; gap: 0.25rem; }
+  .showcase-status::before { content: ''; width: 6px; height: 6px; background: #10b981; border-radius: 50%; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .float-card { position: absolute; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); border-radius: 9999px; box-shadow: 0 10px 30px rgba(31,38,135,0.1); font-size: 0.875rem; }
+  .mini-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .mini-dot.green { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .mini-domain { font-weight: 600; color: var(--color-text); }
+  .float-1 { top: 5%; left: 0; transform: rotate(-2deg); animation: float-1 6s ease-in-out infinite; }
+  .float-2 { bottom: 15%; right: 0; transform: rotate(1.5deg); animation: float-2 7s ease-in-out infinite; animation-delay: -2s; }
+  @keyframes float-1 { 0%,100% { transform: translate(0,0) rotate(-2deg); } 50% { transform: translate(0,-12px) rotate(-2deg); } }
+  @keyframes float-2 { 0%,100% { transform: translate(0,0) rotate(1.5deg); } 50% { transform: translate(0,-10px) rotate(1.5deg); } }
+
+  /* ==========================================
+     SECTIONS GENERAL
+     ========================================== */
+  .section-header { text-align: center; max-width: 620px; margin: 0 auto 3.5rem; }
+  .section-header h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.75rem; color: var(--color-text); }
+  .section-header p { font-size: 1.0625rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* Steps */
+  .iv-steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+  .iv-step-card { background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); padding: 1.75rem; transition: all 0.3s ease; box-shadow: 0 12px 40px rgba(31,38,135,0.08); }
+  .iv-step-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(81,112,255,0.12); border-color: rgba(81,112,255,0.2); }
+  .step-number { font-size: 0.75rem; font-weight: 800; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  .iv-step-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--color-text); }
+  .iv-step-card p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* Notice */
+  .iv-notice { display: flex; gap: 1.25rem; background: rgba(245,158,11,0.06); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(245,158,11,0.2); border-radius: var(--border-radius); padding: 1.5rem 2rem; align-items: flex-start; box-shadow: 0 12px 40px rgba(245,158,11,0.08); }
+  .iv-notice-icon { flex-shrink: 0; color: #d97706; margin-top: 2px; }
+  .iv-notice-content h3 { font-size: 1rem; font-weight: 700; color: #92400e; margin: 0 0 0.5rem; }
+  .iv-notice-content p { font-size: 0.9375rem; color: #a16207; line-height: 1.6; margin: 0; }
+  .iv-notice-content strong { color: #78350f; }
+
+  /* Benefits */
+  .iv-benefits-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+  .iv-benefit-card { text-align: center; padding: 2rem 1.5rem; background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius); transition: all 0.3s ease; box-shadow: 0 12px 40px rgba(31,38,135,0.08); }
+  .iv-benefit-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(81,112,255,0.12); border-color: rgba(81,112,255,0.2); }
+  .iv-benefit-icon { width: 48px; height: 48px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; background: rgba(81,112,255,0.08); border-radius: 12px; color: var(--color-primary); }
+  .iv-benefit-card h3 { font-size: 1rem; font-weight: 700; margin: 0 0 0.5rem; color: var(--color-text); }
+  .iv-benefit-card p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* FAQ */
+  .iv-faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+  .iv-faq-item { background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(31,38,135,0.04); }
+  .iv-faq-item:hover { border-color: rgba(81,112,255,0.2); }
+  .iv-faq-item.active { border-color: var(--color-primary); box-shadow: 0 8px 24px rgba(81,112,255,0.1); }
+  .iv-faq-question { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: none; border: none; cursor: pointer; text-align: left; font-family: inherit; font-size: 1rem; font-weight: 600; color: var(--color-text); transition: color 0.2s ease; }
+  .iv-faq-question:hover { color: var(--color-primary); }
+  .iv-faq-icon { flex-shrink: 0; color: var(--color-text-muted); transition: transform 0.3s ease; }
+  .iv-faq-item.active .iv-faq-icon { transform: rotate(180deg); color: var(--color-primary); }
+  .iv-faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s ease; }
+  .iv-faq-item.active .iv-faq-answer { max-height: 300px; }
+  .iv-faq-answer p { padding: 0 1.5rem 1.25rem; margin: 0; font-size: 0.9375rem; color: var(--color-text-muted); line-height: 1.7; }
+
+  /* CTA */
+  .iv-cta-section { padding: 6rem 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden; }
+  .iv-cta-card { position: relative; z-index: 1; text-align: center; max-width: 700px; margin: 0 auto; }
+  .iv-cta-card h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; color: white; margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .iv-cta-card p { font-size: 1.125rem; color: rgba(255,255,255,0.7); margin: 0 0 2.5rem; line-height: 1.6; }
+
+  /* ============================================================
+     NEW: VISUAL DOCUMENT SECTION (dv-)
+     ============================================================ */
+  .dv-section { overflow: hidden; }
+
+  /* Legend */
+  .dv-legend { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; }
+  .dv-legend-item { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--color-text-muted); }
+  .dv-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dv-dot-ind { background: var(--color-primary); }
+  .dv-dot-com { background: #8b5cf6; }
+
+  /* Pipeline flow */
+  .dv-flow { display: flex; align-items: center; gap: 0.75rem; max-width: 900px; margin: 0 auto 3.5rem; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.8); border-radius: 9999px; box-shadow: 0 12px 40px rgba(31,38,135,0.08); }
+  .dv-flow-step { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--color-text-muted); white-space: nowrap; }
+  .dv-flow-icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(81,112,255,0.1); color: var(--color-primary); transition: all 0.3s ease; }
+  .dv-flow-step:hover .dv-flow-icon { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(81,112,255,0.08); }
+  .dv-flow-final { color: #059669; }
+  .dv-flow-final .dv-flow-icon { background: rgba(16,185,129,0.12); color: #10b981; }
+  .dv-flow-line { flex: 1; height: 2px; min-width: 16px; background: repeating-linear-gradient(90deg, rgba(81,112,255,0.5) 0 8px, transparent 8px 16px); background-size: 16px 2px; animation: dvFlow 1s linear infinite; opacity: 0.5; }
+  @keyframes dvFlow { to { background-position: 16px 0; } }
+
+  /* Bento grid */
+  .dv-bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+  .dv-card { grid-column: span 6; display: flex; flex-direction: column; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.85); border-radius: var(--border-radius); padding: 1.5rem; box-shadow: 0 12px 40px rgba(31,38,135,0.08); transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
+  .dv-card-hero { grid-column: span 7; }
+  .dv-card-tall { grid-column: span 5; }
+  .dv-card:hover { transform: translateY(-6px); border-color: rgba(81,112,255,0.3); box-shadow: 0 24px 60px rgba(81,112,255,0.14); }
+
+  .dv-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .dv-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+  .dv-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+  .dv-tag-ind { background: rgba(81,112,255,0.1); color: var(--color-primary); }
+  .dv-tag-ind::before { background: var(--color-primary); }
+  .dv-tag-com { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+  .dv-tag-com::before { background: #8b5cf6; }
+  .dv-badge { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); }
+
+  /* Stage: the pedestal for each mockup */
+  .dv-stage { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; border-radius: 16px; background:
+      radial-gradient(circle at 50% 0%, rgba(81,112,255,0.06), transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(100,116,139,0.04) 22px, rgba(100,116,139,0.04) 23px),
+      #f1f5f9;
+    overflow: hidden; }
+
+  /* Scan line overlay */
+  .dv-scanline { position: absolute; left: 0; right: 0; top: -40%; height: 40%; pointer-events: none; opacity: 0; z-index: 5; background: linear-gradient(to bottom, transparent, rgba(81,112,255,0.12) 42%, rgba(81,112,255,0.55) 50%, rgba(81,112,255,0.12) 58%, transparent); box-shadow: 0 0 18px rgba(81,112,255,0.35); }
+  .dv-card:hover .dv-scanline { animation: dvScan 1.8s ease-in-out infinite; }
+  @keyframes dvScan { 0% { top: -40%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
+  /* Status pill (phased text) */
+  .dv-status { display: grid; place-items: center; height: 28px; margin: 1.25rem 0 1rem; }
+  .dv-status span { grid-area: 1 / 1; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 9999px; transition: opacity 0.3s ease; }
+  .scan-idle { color: var(--color-text-muted); background: rgba(100,116,139,0.08); opacity: 1; }
+  .scan-verifying { color: var(--color-primary); background: rgba(81,112,255,0.1); opacity: 0; }
+  .scan-done { color: #059669; background: rgba(16,185,129,0.12); opacity: 0; }
+  .dv-card:hover .scan-idle { opacity: 0; }
+  .dv-card:hover .scan-verifying { animation: dvPhase1 1.8s ease forwards; }
+  .dv-card:hover .scan-done { animation: dvPhase2 1.8s ease forwards; }
+  @keyframes dvPhase1 { 0% { opacity: 0; } 12% { opacity: 1; } 70% { opacity: 1; } 82% { opacity: 0; } 100% { opacity: 0; } }
+  @keyframes dvPhase2 { 0%, 80% { opacity: 0; } 100% { opacity: 1; } }
+
+  .dv-info h3 { font-size: 1.0625rem; font-weight: 700; margin: 0 0 0.4rem; color: var(--color-text); }
+  .dv-info p { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6; margin: 0; }
+
+  /* Shared mockup base */
+  .dv-mockup { position: relative; width: 100%; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease; }
+  .dv-card:hover .dv-mockup { transform: scale(1.02) rotate(-0.5deg); }
+
+  /* ===== CIN / ID CARD ===== */
+  .dv-cin { max-width: 400px; aspect-ratio: 1.586 / 1; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 45%, #0f766e 100%); border-radius: 16px; padding: 14px 16px; color: #e0f2fe; box-shadow: 0 18px 40px rgba(30,58,138,0.35), inset 0 1px 0 rgba(255,255,255,0.25); display: flex; flex-direction: column; overflow: hidden; }
+  .cin-pattern { position: absolute; inset: 0; opacity: 0.14; background: repeating-radial-gradient(circle at 15% 20%, transparent 0 6px, rgba(255,255,255,0.6) 6px 7px), repeating-radial-gradient(circle at 85% 80%, transparent 0 8px, rgba(255,255,255,0.4) 8px 9px); pointer-events: none; }
+  .cin-holo { position: absolute; top: -30px; right: -30px; width: 130px; height: 130px; border-radius: 50%; background: conic-gradient(from 0deg, rgba(255,255,255,0.0), rgba(186,230,253,0.5), rgba(255,255,255,0.0), rgba(147,197,253,0.5), rgba(255,255,255,0.0)); filter: blur(4px); opacity: 0.5; animation: cinHolo 8s linear infinite; pointer-events: none; }
+  @keyframes cinHolo { to { transform: rotate(360deg); } }
+  .cin-header { position: relative; display: flex; align-items: center; gap: 8px; z-index: 2; }
+  .cin-emblem { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.15); color: #fde68a; }
+  .cin-country { display: flex; flex-direction: column; line-height: 1.25; flex: 1; }
+  .cin-country span:first-child { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; }
+  .cin-country span:last-child { font-size: 0.5rem; letter-spacing: 0.05em; opacity: 0.8; }
+  .cin-vcheck { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #10b981; color: white; box-shadow: 0 0 0 3px rgba(16,185,129,0.35); transition: transform 0.3s ease; }
+  .dv-card:hover .cin-vcheck { transform: scale(1.15); }
+  .cin-title { position: relative; z-index: 2; margin-top: 8px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; color: #bae6fd; }
+  .cin-body { position: relative; z-index: 2; display: flex; gap: 12px; margin-top: 10px; flex: 1; }
+  .cin-photo { width: 64px; height: 78px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.35); color: rgba(224,242,254,0.85); }
+  .cin-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; flex: 1; align-content: start; }
+  .cin-field { display: flex; flex-direction: column; }
+  .cin-field span { font-size: 0.45rem; letter-spacing: 0.08em; opacity: 0.7; font-weight: 600; }
+  .cin-field strong { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em; font-family: ui-monospace, 'SFMono-Regular', monospace; }
+  .cin-mrz { position: relative; z-index: 2; margin-top: 8px; font-family: ui-monospace, 'SFMono-Regular', monospace; font-size: 0.52rem; letter-spacing: 0.12em; color: rgba(224,242,254,0.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ===== PASSPORT ===== */
+  .dv-passport { max-width: 250px; aspect-ratio: 0.72 / 1; background: linear-gradient(160deg, #7f1d1d 0%, #5b1414 55%, #450a0a 100%); border-radius: 14px; padding: 18px 16px; color: #fcd34d; box-shadow: 0 18px 40px rgba(69,10,10,0.4), inset 0 1px 0 rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; }
+  .pp-frame { position: absolute; inset: 8px; border: 1px solid rgba(252,211,77,0.35); border-radius: 8px; pointer-events: none; }
+  .pp-top { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.14em; margin-top: 6px; }
+  .pp-emblem { margin: 18px 0 14px; color: #fbbf24; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); transition: transform 0.4s ease; }
+  .dv-card:hover .pp-emblem { transform: rotate(12deg) scale(1.08); }
+  .pp-word { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.22em; color: #fde68a; }
+  .pp-sub { font-size: 0.6rem; letter-spacing: 0.18em; opacity: 0.85; margin-top: 2px; }
+  .pp-bio { margin-top: 14px; color: #fbbf24; opacity: 0.9; }
+  .pp-data { margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 3px; text-align: left; padding-top: 12px; }
+  .pp-row { display: flex; justify-content: space-between; }
+  .pp-row span { font-size: 0.5rem; letter-spacing: 0.08em; opacity: 0.75; }
+  .pp-row strong { font-size: 0.58rem; font-weight: 800; font-family: ui-monospace, monospace; color: #fde68a; }
+  .pp-mrz { margin-top: 8px; font-family: ui-monospace, monospace; font-size: 0.48rem; letter-spacing: 0.1em; color: rgba(252,211,77,0.7); white-space: nowrap; overflow: hidden; width: 100%; }
+
+  /* ===== REGISTRE DE COMMERCE ===== */
+  .dv-rc { max-width: 340px; background: #fffdf7; border-radius: 12px; padding: 22px 20px; color: #1e293b; box-shadow: 0 18px 40px rgba(15,23,42,0.16); position: relative; overflow: hidden; }
+  .rc-frame { position: absolute; inset: 7px; border: 2px solid rgba(180,83,9,0.35); border-radius: 7px; pointer-events: none; }
+  .rc-frame::after { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(180,83,9,0.2); border-radius: 5px; }
+  .rc-header { position: relative; text-align: center; padding-bottom: 12px; border-bottom: 1px dashed rgba(180,83,9,0.3); }
+  .rc-seal { color: #b45309; margin-bottom: 6px; animation: rcSeal 6s ease-in-out infinite; }
+  @keyframes rcSeal { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(6deg); } }
+  .rc-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em; color: #7c2d12; }
+  .rc-sub { font-size: 0.58rem; letter-spacing: 0.16em; color: #a16207; text-transform: uppercase; margin-top: 3px; }
+  .rc-stamp { position: absolute; top: 6px; right: -6px; transform: rotate(12deg); font-size: 0.55rem; font-weight: 800; letter-spacing: 0.06em; color: #16a34a; border: 2px solid #16a34a; border-radius: 6px; padding: 3px 7px; opacity: 0.85; transition: transform 0.3s ease; }
+  .dv-card:hover .rc-stamp { transform: rotate(6deg) scale(1.06); }
+  .rc-rows { position: relative; margin-top: 14px; display: flex; flex-direction: column; }
+  .rc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 2px; border-bottom: 1px solid rgba(180,83,9,0.1); }
+  .rc-row:last-child { border-bottom: none; }
+  .rc-row span { font-size: 0.68rem; letter-spacing: 0.05em; color: #92400e; text-transform: uppercase; font-weight: 600; }
+  .rc-row strong { font-size: 0.8rem; font-weight: 700; font-family: ui-monospace, monospace; color: #1e293b; }
+  .rc-active { color: #16a34a !important; }
+
+  /* ===== ICE ===== */
+  .dv-ice { max-width: 360px; background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%); border-radius: 14px; padding: 16px; color: #e2e8f0; box-shadow: 0 18px 40px rgba(15,23,42,0.4), inset 0 1px 0 rgba(255,255,255,0.08); overflow: hidden; }
+  .ice-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ice-icon { color: var(--color-primary-light); display: flex; }
+  .ice-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; flex: 1; color: #f1f5f9; }
+  .ice-live { font-size: 0.58rem; font-weight: 700; color: #34d399; letter-spacing: 0.04em; }
+  .ice-barcode { color: rgba(226,232,240,0.65); margin-bottom: 14px; padding: 6px 8px; background: rgba(255,255,255,0.05); border-radius: 6px; }
+  .ice-main { display: flex; gap: 14px; align-items: flex-start; }
+  .ice-qr { flex-shrink: 0; width: 64px; height: 64px; padding: 4px; background: #f8fafc; border-radius: 8px; color: #0f172a; display: flex; align-items: center; justify-content: center; }
+  .ice-fields { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  .ice-field { display: flex; flex-direction: column; }
+  .ice-field span { font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; font-weight: 600; }
+  .ice-field strong { font-size: 0.72rem; font-weight: 700; font-family: ui-monospace, monospace; color: #f8fafc; margin-top: 2px; }
+  .ice-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .ice-footer span { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; }
+  .ice-verified { font-size: 0.78rem; font-weight: 800; color: #34d399; display: inline-flex; align-items: center; gap: 6px; }
+  .ice-verified::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.2); animation: icePing 2s ease-in-out infinite; }
+  @keyframes icePing { 0%,100% { box-shadow: 0 0 0 3px rgba(52,211,153,0.2); } 50% { box-shadow: 0 0 0 6px rgba(52,211,153,0); } }
+
+  /* Disclaimer */
+  .dv-disclaimer { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 2.5rem auto 0; max-width: 640px; text-align: center; font-size: 0.8125rem; color: var(--color-text-muted); }
+  .dv-disclaimer svg { flex-shrink: 0; color: var(--color-primary); }
+
+  /* ==========================================
+     FADE IN
+     ========================================== */
+  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards; animation-delay: var(--delay, 0s); }
+  @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+  /* ==========================================
+     RESPONSIVE
+     ========================================== */
+  @media (max-width: 1024px) {
+    .iv-steps-grid { grid-template-columns: 1fr 1fr; }
+    .iv-benefits-grid { grid-template-columns: 1fr 1fr; }
+    .dv-card-hero, .dv-card-tall, .dv-card { grid-column: span 6; }
+    .dv-flow { border-radius: 20px; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+    .dv-flow-line { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .section { padding: 3rem 0 4rem; }
+    .hero-grid { gap: 3rem; }
+    .hero-content { text-align: center; }
+    .hero-subtitle { margin-left: auto; margin-right: auto; }
+    .secondary-links { justify-content: center; }
+    .trust-row { justify-content: center; }
+    .trust-dot { display: none; }
+    .iv-steps-grid { grid-template-columns: 1fr; }
+    .iv-benefits-grid { grid-template-columns: 1fr; }
+    .iv-notice { flex-direction: column; gap: 1rem; padding: 1.25rem; }
+    .dv-bento { grid-template-columns: 1fr; }
+    .dv-card-hero, .dv-card-tall, .dv-card { grid-column: span 1; }
+    .dv-flow-step span { display: none; }
+    .dv-flow { gap: 0.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 2rem; }
+    .trust-row { gap: 0.75rem 1rem; }
+    .trust-item { font-size: 0.8125rem; }
+    .cin-fields { grid-template-columns: 1fr; }
+  }
+
+  /* ==========================================
+     REDUCED MOTION
+     ========================================== */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in, .showcase-card, .float-card, .badge-dot, .cin-holo, .rc-seal, .ice-verified::before, .dv-flow-line { animation: none; opacity: 1; transform: none; }
+    .dv-scanline { display: none; }
+    .dv-card:hover .dv-mockup { transform: none; }
+    .iv-faq-answer { transition: none; }
+    .iv-step-card, .dv-card { transition: none; }
+    .iv-step-card:hover, .dv-card:hover { transform: none; }
+  }
+</style>
+
+<script>
+  // FAQ Accordion (unchanged)
+  document.querySelectorAll('.iv-faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = button.parentElement;
+      const answer = item.querySelector('.iv-faq-answer');
+      const isActive = item.classList.contains('active');
+
+      document.querySelectorAll('.iv-faq-item').forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.iv-faq-question').setAttribute('aria-expanded', 'false');
+          otherItem.querySelector('.iv-faq-answer').hidden = true;
+        }
+      });
+
+      if (isActive) {
+        item.classList.remove('active');
+        button.setAttribute('aria-expanded', 'false');
+        answer.hidden = true;
+      } else {
+        item.classList.add('active');
+        button.setAttribute('aria-expanded', 'true');
+        answer.hidden = false;
+      }
+    });
+  });
+
+  // Scroll-triggered fade-in (unchanged — new dv- elements use .fade-in inside .iv-section)
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          entry.target.classList.add('fade-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.iv-section .fade-in, .iv-cta-section .fade-in').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+  });
+</script>
