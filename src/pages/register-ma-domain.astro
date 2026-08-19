@@ -5,7 +5,7 @@ import anrtLogo from '../assets/anrt-logo.png';
 ---
 
 <Layout title="Register .ma Domain | Hostino">
-    <main class="page-main min-h-screen">
+    <main class="page-main min-h-screen">  
         <div class="container">
             <!-- Hero Section -->
             <div class="register-hero-wrapper">
@@ -285,6 +285,29 @@ import anrtLogo from '../assets/anrt-logo.png';
                 </div>
             </section>
         </div>
+
+        <!-- Generator CTA Section -->
+        <section class="generator-cta-section">
+            <div class="generator-cta-container">
+                <div class="generator-cta-content">
+                    <div class="cta-icon-wrapper">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                    <div class="cta-text">
+                        <h2>Need ideas for your next project?</h2>
+                        <p>Use our AI-powered Domain Name Generator to find the perfect, available .ma domain for your brand in seconds.</p>
+                    </div>
+                </div>
+                <a href="/domain-name-generator" class="btn btn-primary generator-btn">
+                    Try the Generator
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
     </main>
     <Footer />
 </Layout>
@@ -1003,6 +1026,80 @@ import anrtLogo from '../assets/anrt-logo.png';
         border-radius: 4px;
         font-size: 0.9em;
         font-family: monospace;
+    }
+    /* ============ GENERATOR CTA ============ */
+    .generator-cta-section {
+        margin-top: 5rem;
+    }
+
+    .generator-cta-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, rgba(81, 112, 255, 0.05), rgba(81, 112, 255, 0.15));
+        border: 1px solid rgba(81, 112, 255, 0.2);
+        border-radius: 24px;
+        padding: 3rem 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        box-shadow: 0 10px 30px -10px rgba(81, 112, 255, 0.1);
+    }
+
+    .generator-cta-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .cta-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: white;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        box-shadow: 0 8px 20px -8px rgba(81, 112, 255, 0.3);
+        flex-shrink: 0;
+    }
+
+    .cta-text h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .cta-text p {
+        font-size: 1.1rem;
+        color: var(--color-text-muted);
+        margin: 0;
+        max-width: 600px;
+        line-height: 1.5;
+    }
+
+    .generator-btn {
+        flex-shrink: 0;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 900px) {
+        .generator-cta-container {
+            flex-direction: column;
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+
+        .generator-cta-content {
+            flex-direction: column;
+        }
+
+        .cta-text p {
+            max-width: 100%;
+        }
     }
 </style>
 
