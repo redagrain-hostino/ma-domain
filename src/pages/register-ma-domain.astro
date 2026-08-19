@@ -51,7 +51,7 @@ import anrtLogo from '../assets/anrt-logo.png';
                         
                         <div class="form-features">
                             <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Instant Setup</span>
-                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> No Hidden Fees</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> ANRT Accredited</span>
                             <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 24/7 Support</span>
                         </div>
                     </div>
@@ -269,6 +269,18 @@ import anrtLogo from '../assets/anrt-logo.png';
                                 <p>Passport or Certificate of Incorporation</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="important-points">
+                        <div class="points-header">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="warning-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <h3>Important Points</h3>
+                        </div>
+                        <ul class="points-list">
+                            <li><strong>WHOIS Privacy protection is not available for .ma domains:</strong> the registrant's details remain public in the registry database.</li>
+                            <li><strong>Submit your identification documents before the deadline</strong> to avoid domain suspension.</li>
+                            <li><strong>If your .ma domain is suspended</strong> (DNS blocked, <code>serverHold</code> status), the Hostino team will assist you in submitting a reactivation request to the ANRT.</li>
+                        </ul>
                     </div>
                 </div>
             </section>
@@ -686,7 +698,7 @@ import anrtLogo from '../assets/anrt-logo.png';
     }
     
     .process-container {
-        max-width: 1000px;
+        max-width: 1200px;
         margin: 0 auto;
     }
     
@@ -813,7 +825,7 @@ import anrtLogo from '../assets/anrt-logo.png';
         background: white;
         box-shadow: 0 20px 50px -12px rgba(81, 112, 255, 0.08);
         border: 1px solid rgba(81, 112, 255, 0.1);
-        max-width: 1000px;
+        max-width: 1200px;
         margin: 0 auto;
     }
     
@@ -926,6 +938,71 @@ import anrtLogo from '../assets/anrt-logo.png';
             text-align: left;
             padding-left: calc(48px + 1rem); /* Align with text */
         }
+    }
+
+    /* ============ IMPORTANT POINTS ============ */
+    .important-points {
+        margin-top: 4rem;
+        padding-top: 3rem;
+        border-top: 1px solid rgba(81, 112, 255, 0.1);
+    }
+
+    .points-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .warning-icon {
+        color: var(--color-text-muted);
+        width: 18px;
+        height: 18px;
+    }
+
+    .points-header h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0;
+    }
+
+    .points-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .points-list li {
+        font-size: 1rem;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+        position: relative;
+        padding-left: 1.25rem;
+    }
+
+    .points-list li::before {
+        content: "-";
+        position: absolute;
+        left: 0;
+        color: var(--color-text-muted);
+    }
+
+    .points-list strong {
+        color: var(--color-text);
+        font-weight: 500;
+    }
+
+    .points-list code {
+        background: rgba(81, 112, 255, 0.05);
+        color: var(--color-primary);
+        padding: 0.1rem 0.3rem;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-family: monospace;
     }
 </style>
 
